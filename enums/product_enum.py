@@ -12,76 +12,76 @@ class productInfoProvidedNotice(Enum):
     WEAR = {
         "productInfoProvidedNoticeType": "WEAR",
         "wear": {
-            "returnCostReason": "string",
-            "noRefundReason": "string",
-            "qualityAssuranceStandard": "string",
-            "compensationProcedure": "string",
-            "troubleShootingContents": "string",
-            "material": "string",
-            "color": "string",
-            "size": "string",
-            "manufacturer": "string",
-            "caution": "string",
-            "packDate": "string",
-            "packDateText": "string",
-            "warrantyPolicy": "string",
-            "afterServiceDirector": "string",
+            "returnCostReason": "0",  # 미입력 시 상품상세 참조
+            "noRefundReason": "0",  # 미입력 시 상품상세 참조
+            "qualityAssuranceStandard": "0",  # 미입력 시 상품상세 참조
+            "compensationProcedure": "0",  # 미입력 시 상품상세 참조
+            "troubleShootingContents": "0",  # 미입력 시 상품상세 참조
+            "material": "상품상세참조",
+            "color": "상품상세참조",
+            "size": "상품상세참조",
+            "manufacturer": "상품상세참조",
+            "caution": "상품상세참조",
+            # "packDate": "상품상세참조",
+            "packDateText": "상품상세참조",
+            "warrantyPolicy": "상품상세참조",
+            "afterServiceDirector": "상품상세참조",
         },
     }
 
     SHOES = {
         "productInfoProvidedNoticeType": "SHOES",
         "shoes": {
-            "returnCostReason": "string",
-            "noRefundReason": "string",
-            "qualityAssuranceStandard": "string",
-            "compensationProcedure": "string",
-            "troubleShootingContents": "string",
-            "material": "string",
-            "color": "string",
-            "size": "string",
-            "height": "string",
-            "manufacturer": "string",
-            "caution": "string",
-            "warrantyPolicy": "string",
-            "afterServiceDirector": "string",
+            "returnCostReason": "0",  # 미입력 시 상품상세 참조
+            "noRefundReason": "0",  # 미입력 시 상품상세 참조
+            "qualityAssuranceStandard": "0",  # 미입력 시 상품상세 참조
+            "compensationProcedure": "0",  # 미입력 시 상품상세 참조
+            "troubleShootingContents": "0",  # 미입력 시 상품상세 참조
+            "material": "상품상세참조",
+            "color": "상품상세참조",
+            "size": "상품상세참조",
+            "height": "상품상세참조",
+            "manufacturer": "상품상세참조",
+            "caution": "상품상세참조",
+            "warrantyPolicy": "상품상세참조",
+            "afterServiceDirector": "상품상세참조",
         },
     }
 
     BAG = {
         "productInfoProvidedNoticeType": "BAG",
         "bag": {
-            "returnCostReason": "string",
-            "noRefundReason": "string",
-            "qualityAssuranceStandard": "string",
-            "compensationProcedure": "string",
-            "troubleShootingContents": "string",
-            "type": "string",
-            "material": "string",
-            "color": "string",
-            "size": "string",
-            "manufacturer": "string",
-            "caution": "string",
-            "warrantyPolicy": "string",
-            "afterServiceDirector": "string",
+            "returnCostReason": "0",  # 미입력 시 상품상세 참조
+            "noRefundReason": "0",  # 미입력 시 상품상세 참조
+            "qualityAssuranceStandard": "0",  # 미입력 시 상품상세 참조
+            "compensationProcedure": "0",  # 미입력 시 상품상세 참조
+            "troubleShootingContents": "0",  # 미입력 시 상품상세 참조
+            "type": "상품상세참조",
+            "material": "상품상세참조",
+            "color": "상품상세참조",
+            "size": "상품상세참조",
+            "manufacturer": "상품상세참조",
+            "caution": "상품상세참조",
+            "warrantyPolicy": "상품상세참조",
+            "afterServiceDirector": "상품상세참조",
         },
     }
 
     FASHION_ITEMS = {
         "productInfoProvidedNoticeType": "FASHION_ITEMS",
         "fashionItems": {
-            "returnCostReason": "string",
-            "noRefundReason": "string",
-            "qualityAssuranceStandard": "string",
-            "compensationProcedure": "string",
-            "troubleShootingContents": "string",
-            "type": "string",
-            "material": "string",
-            "size": "string",
-            "manufacturer": "string",
-            "caution": "string",
-            "warrantyPolicy": "string",
-            "afterServiceDirector": "string",
+            "returnCostReason": "0",  # 미입력 시 상품상세 참조
+            "noRefundReason": "0",  # 미입력 시 상품상세 참조
+            "qualityAssuranceStandard": "0",  # 미입력 시 상품상세 참조
+            "compensationProcedure": "0",  # 미입력 시 상품상세 참조
+            "troubleShootingContents": "0",  # 미입력 시 상품상세 참조
+            "type": "상품상세참조",
+            "material": "상품상세참조",
+            "size": "상품상세참조",
+            "manufacturer": "상품상세참조",
+            "caution": "상품상세참조",
+            "warrantyPolicy": "상품상세참조",
+            "afterServiceDirector": "상품상세참조",
         },
     }
 
