@@ -9,7 +9,12 @@ class ProductDetailDto:
         self.__product_main_img = ""
         self.__product_optional_imgs = []
         self.__product_detail_imgs = []
+
+        # 옵션
         self.__product_option = ""
+        self.__option_group_names = []
+        self.__option_names = []
+        self.__option_prices = []
 
     @property
     def product_name(self):  # getter
