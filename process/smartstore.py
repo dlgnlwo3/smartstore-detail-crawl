@@ -191,6 +191,11 @@ class SmartStoreCrawler:
         # a tag 클릭 시 옵션이 들어있는 ul tag가 나온다.
         # $x('//a[contains(@class, "a:pcs.opopen")]')
         try:
+            option_group_names = []
+            option_names = []
+            option_prices = []
+            option_str = ""
+
             driver.implicitly_wait(1)
             option_selector = driver.find_element(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
             product_detail_dto.product_option = "O"
@@ -202,11 +207,6 @@ class SmartStoreCrawler:
             print(option_len)
 
             option_selectors = option_selectors[:option_len]
-
-            option_group_names = []
-            option_names = []
-            option_prices = []
-            option_str = ""
 
             # 옵션 1개
             if option_len == 1:
