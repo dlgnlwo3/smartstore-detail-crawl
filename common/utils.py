@@ -3,6 +3,14 @@ import random
 import time
 from datetime import datetime
 import os
+from mimetypes import MimeTypes
+
+
+def get_mime_type(file_path):
+    mime = MimeTypes()
+    mime_type, encoding = mime.guess_type(file_path)
+    return mime_type
+
 
 # 전역 로그
 def global_log_append(text):

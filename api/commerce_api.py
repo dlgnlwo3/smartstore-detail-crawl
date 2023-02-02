@@ -40,7 +40,6 @@ class CommerceAPI:
             "client_secret_sign": self.client_secret_sign,
             "grant_type": "client_credentials",
             "type": "SELF",
-            # "account_id": "anchang960822",
         }
 
         print(params)
@@ -66,7 +65,6 @@ class CommerceAPI:
     async def set_client_secret_sign(self):
 
         self.timestamp = self.get_timestamp()
-        # self.timestamp = 1643961623299
         # 밑줄로 연결하여 password 생성
         password = self.client_id + "_" + str(self.timestamp)
         # bcrypt 해싱
@@ -89,8 +87,6 @@ class CommerceAPI:
         txt = res_data.decode("utf-8")
         data = json.loads(txt)
         return data
-        # channelProducts = data["originProduct"]
-        # print(channelProducts)
 
     def add_product(self, originProduct: dict):
         print("product_add")
@@ -132,8 +128,3 @@ if __name__ == "__main__":
     print(data)
 
     clipboard.copy(str(data))
-
-    # with open("sample.json", "w") as outfile:
-    #     json.dump(data, outfile)
-
-    # searchBot.add_product(data)

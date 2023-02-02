@@ -29,8 +29,6 @@ class CommerceImageUploader:
     def initData(self):
         asyncio.run(self.set_client_secret_sign())
         asyncio.run(self.set_token())
-        # self.set_client_secret_sign()
-        # self.set_token()
 
     # 전자서명 (self.timestamp, self.client_secret_sign)
     async def set_client_secret_sign(self):
@@ -149,9 +147,9 @@ class CommerceImageUploader:
 if __name__ == "__main__":
 
     # parameter
-    # 책인감 키정보
-    client_id = "3vn7W8mDesvanAyEX8r19H"
-    client_secret = "$2a$04$h.0rEMw5ts/vcR6fjQJhH."
+    # 키정보
+    client_id = ""
+    client_secret = ""
 
     cmBot = CommerceImageUploader(client_id, client_secret)
 
