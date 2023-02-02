@@ -194,7 +194,7 @@ class SmartStoreCrawler:
             option_group_names = []
             option_names = []
             option_prices = []
-            option_str = ""
+            option_name = ""
 
             driver.implicitly_wait(1)
             option_selector = driver.find_element(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
@@ -226,20 +226,22 @@ class SmartStoreCrawler:
                     for option_li in option_li_els:
 
                         # 옵션이름
-                        option_str = option_li.get_attribute("textContent")
-                        option_names.append(f"{option_str}")
-                        print(option_str)
+                        option_name = option_li.get_attribute("textContent")
 
                         # 옵션가격
                         option_price = "0"
                         try:
                             price_pattern = r"[\+]+\d+['원']"
-                            option_price: str = re.findall(price_pattern, option_str)[0]
+                            option_price: str = re.findall(price_pattern, option_name)[0]
                             option_price = option_price.replace("+", "")
                             option_price = option_price.replace("원", "")
                         except Exception as e:
                             pass
                         print(option_price)
+
+                        option_name = option_name.replace(f" (+{option_price}원)", "")
+                        option_names.append(f"{option_name}")
+                        print(option_name)
 
                         option_prices.append(f"{option_price}")
 
@@ -322,6 +324,7 @@ class SmartStoreCrawler:
 
                         # 옵션이름
                         second_option_name = second_option_name.replace(" (품절)", "")
+                        second_option_name = second_option_name.replace(f" (+{option_price}원)", "")
                         print(f"{first_option_name},{second_option_name}")
                         option_names.append(f"{first_option_name},{second_option_name}")
 
