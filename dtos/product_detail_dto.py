@@ -96,6 +96,51 @@ class ProductDetailDto:
     def product_option(self, value: str):  # setter
         self.__product_option = value
 
+    @property
+    def option_group_names(self):  # getter
+        return self.__option_group_names
+
+    @option_group_names.setter
+    def option_group_names(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ";".join(value)
+        if len(list_to_str) > 0:
+            list_to_str += ";"
+
+        self.__option_group_names = list_to_str
+
+    @property
+    def option_names(self):  # getter
+        return self.__option_names
+
+    @option_names.setter
+    def option_names(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ";".join(value)
+        if len(list_to_str) > 0:
+            list_to_str += ";"
+
+        self.__option_names = list_to_str
+
+    @property
+    def option_prices(self):  # getter
+        return self.__option_prices
+
+    @option_prices.setter
+    def option_prices(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ";".join(value)
+        if len(list_to_str) > 0:
+            list_to_str += ";"
+
+        self.__option_prices = list_to_str
+
     def to_print(self):
         print("상품명", self.product_name)
         print("상품URL", self.product_url)
@@ -112,4 +157,7 @@ class ProductDetailDto:
             "추가이미지": self.product_optional_imgs,
             "상세이미지": self.product_detail_imgs,
             "옵션": self.product_option,
+            "옵션그룹": self.option_group_names,
+            "옵션이름": self.option_names,
+            "옵션가격": self.option_prices,
         }

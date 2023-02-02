@@ -31,6 +31,9 @@ class SmartStoreCrawler:
     def setGuiDto(self, guiDto: GUIDto):
         self.guiDto = guiDto
 
+    def setLogger(self, log_msg):
+        self.log_msg = log_msg
+
     def to_excel(self, products):
         now = datetime.now().strftime("%Y%m%d%H%M%S")
         store_name = self.guiDto.store_url.split("/")[-1]
@@ -184,7 +187,170 @@ class SmartStoreCrawler:
         finally:
             driver.implicitly_wait(self.default_wait)
 
-        # 상세이미지 -> 화면상에 나타나지 않으면 이미지 src가 비정상적으로 출력됨 -> 한번씩 화면에 비춰줘야 함
+        # 옵션
+        # a tag 클릭 시 옵션이 들어있는 ul tag가 나온다.
+        # $x('//a[contains(@class, "a:pcs.opopen")]')
+        try:
+            driver.implicitly_wait(1)
+            option_selector = driver.find_element(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
+            product_detail_dto.product_option = "O"
+            print(f"옵션이 있습니다.")
+
+            # 옵션의 개수를 파악합니다. -> 숨겨져있는 element가 하나씩 더 검색됨...
+            option_selectors = driver.find_elements(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
+            option_len = int(len(option_selectors) / 2)
+            print(option_len)
+
+            option_selectors = option_selectors[:option_len]
+
+            option_group_names = []
+            option_names = []
+            option_prices = []
+            option_str = ""
+
+            # 옵션 1개
+            if option_len == 1:
+                print(f"옵션 1개 입니다.")
+
+                for option_selector in option_selectors:
+                    print(option_selector.get_attribute("textContent"))
+                    option_group_names.append(option_selector.get_attribute("textContent"))
+
+                    # 옵션 클릭 (열기)
+                    actions = ActionChains(driver).move_to_element(option_selector).click()
+                    actions.perform()
+                    print()
+
+                    # $x('//ul[@role="listbox"]//li')
+                    option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
+                    for option_li in option_li_els:
+
+                        # 옵션이름
+                        option_str = option_li.get_attribute("textContent")
+                        option_names.append(f"{option_str}")
+                        print(option_str)
+
+                        # 옵션가격
+                        option_price = "0"
+                        try:
+                            price_pattern = r"[\+]+\d+['원']"
+                            option_price: str = re.findall(price_pattern, option_str)[0]
+                            option_price = option_price.replace("+", "")
+                            option_price = option_price.replace("원", "")
+                        except Exception as e:
+                            pass
+                        print(option_price)
+
+                        option_prices.append(f"{option_price}")
+
+                        print(f"{option_names} {option_prices}")
+                        print()
+
+                    # 옵션 클릭 (닫기)
+                    actions = ActionChains(driver).move_to_element(option_selector).click()
+                    actions.perform()
+                    print()
+
+            # 옵션 2개
+            elif option_len == 2:
+                print(f"옵션 2개 입니다.")
+
+                first_option_names = []
+
+                for option_selector in option_selectors:
+                    option_group_name = option_selector.get_attribute("textContent")
+                    print(option_group_name)
+                    option_group_names.append(option_selector.get_attribute("textContent"))
+
+                print(option_group_names)
+                print()
+
+                # 첫번째 옵션 그룹 열기
+                driver.find_element(
+                    By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                ).click()
+
+                # $x('//ul[@role="listbox"]//li')
+                first_option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
+
+                for first_option_li in first_option_li_els:
+                    first_option_name = first_option_li.get_attribute("textContent")
+                    print(first_option_name)
+                    first_option_names.append(first_option_name)
+
+                # 첫번째 옵션 그룹 닫기
+                driver.find_element(
+                    By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                ).click()
+
+                print(first_option_names)
+                print()
+
+                for first_option_name in first_option_names:
+                    # 첫번째 옵션 그룹 열기
+                    driver.find_element(
+                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                    ).click()
+
+                    # 첫번째 옵션 이름 클릭 (블랙)
+                    driver.find_element(
+                        By.XPATH, f'//a[contains(@class, "N=a:pcs.opone")][contains(text(), "{first_option_name}")]'
+                    ).click()
+
+                    # 두번째 옵션 그룹 열기
+                    driver.find_element(
+                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]'
+                    ).click()
+
+                    # 두번째 옵션 이름 추출
+                    second_option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
+
+                    for second_option_li in second_option_li_els:
+                        second_option_name = second_option_li.get_attribute("textContent")
+
+                        # 옵션가격
+                        option_price = "0"
+                        try:
+                            price_pattern = r"[\+]+\d+['원']"
+                            option_price: str = re.findall(price_pattern, second_option_name)[0]
+                            option_price = option_price.replace("+", "")
+                            option_price = option_price.replace("원", "")
+                        except Exception as e:
+                            pass
+                        print(option_price)
+                        option_prices.append(f"{option_price}")
+
+                        # 옵션이름
+                        second_option_name = second_option_name.replace(" (품절)", "")
+                        print(f"{first_option_name},{second_option_name}")
+                        option_names.append(f"{first_option_name},{second_option_name}")
+
+                    # 두번째 옵션 그룹 닫기
+                    driver.find_element(
+                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]'
+                    ).click()
+
+                    print(option_prices)
+                    print(option_names)
+                    print()
+
+            # 옵션 3개
+            elif option_len == 3:
+                print(f"옵션 3개 입니다.")
+                pass
+
+        except Exception as e:
+            print(e)
+            print("option error")
+        finally:
+            driver.implicitly_wait(self.default_wait)
+
+            product_detail_dto.option_group_names = option_group_names
+            product_detail_dto.option_names = option_names
+            product_detail_dto.option_prices = option_prices
+            print()
+
+        # 상세이미지 -> 화면상에 나타나지 않으면 이미지 src가 비정상적으로 출력됨 -> 한번씩 화면에 비춰줘야 정상적인 이미지 주소가 나옴
         try:
             driver.implicitly_wait(1)
             product_detail_imgs = []
@@ -201,19 +367,6 @@ class SmartStoreCrawler:
             product_detail_dto.product_detail_imgs = product_detail_imgs
         except Exception as e:
             print(e)
-        finally:
-            driver.implicitly_wait(self.default_wait)
-
-        # 옵션
-        # a tag 클릭 시 옵션이 들어있는 ul tag가 나온다.
-        # $x('//a[contains(@class, "a:pcs.opopen")]')
-        try:
-            driver.implicitly_wait(1)
-            option_selector = driver.find_element(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
-            product_detail_dto.product_option = "O"
-            print()
-        except Exception as e:
-            print("no option")
         finally:
             driver.implicitly_wait(self.default_wait)
 
@@ -246,6 +399,10 @@ class SmartStoreCrawler:
                 self.save_to_excel(productDetailDtos)
                 time.sleep(1)
 
+                print(f"{self.i} / {product_name} 저장")
+
+                self.log_msg.emit(f"{self.i} / {product_name} 저장")
+
             except Exception as e:
                 print(e)
                 global_log_append(str(e))
@@ -255,7 +412,7 @@ class SmartStoreCrawler:
 
         print(f"{self.i} / {product_name} 상품까지 저장되었습니다.")
 
-        # global_log_append(f"{self.i} / {product_name} 상품까지 저장되었습니다.")
+        global_log_append(f"{self.i} / {product_name} 상품까지 저장되었습니다.")
 
         time.sleep(1)
 

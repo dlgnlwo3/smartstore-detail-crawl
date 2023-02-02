@@ -27,7 +27,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 상품상세정보 크롤러" -w --onefile --clean "main.py" --icon "assets\instagram.ico"
+# pyinstaller -n "스마트스토어 상품상세정보 크롤러 (옵션x)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):

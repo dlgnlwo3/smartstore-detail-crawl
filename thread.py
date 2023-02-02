@@ -91,6 +91,8 @@ class ProductDetailSearchThread(QThread):
 
             smartstoreCrawler.setGuiDto(self.guiDto)
 
+            smartstoreCrawler.setLogger(self.log_msg)
+
             smartstoreCrawler.work_start()
 
             end_time = timer()
