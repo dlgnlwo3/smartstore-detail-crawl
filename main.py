@@ -14,9 +14,8 @@ from datetime import datetime
 from common.chrome import *
 from dtos.gui_dto import *
 from common.utils import global_log_append
-from thread import *
-from tabs.product_crawler import ProductCrawlerUI
-from tabs.product_uploader import ProductUploaderUI
+from tabs.product_crawler_tab import ProductCrawlerUI
+from tabs.product_uploader_tab import ProductUploaderUI
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 
 

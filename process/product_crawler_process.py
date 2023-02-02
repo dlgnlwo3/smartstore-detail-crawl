@@ -21,7 +21,7 @@ import urllib.request
 import re
 
 
-class SmartStoreCrawler:
+class ProductCrawlerProcess:
     def __init__(self):
         self.driver: webdriver.Chrome = get_chrome_driver_new(is_headless=False, is_scret=True)
         self.default_wait = 10
@@ -505,8 +505,8 @@ if __name__ == "__main__":
         r"D:\Consolework\smartstore-detail-crawl\output\20230130\dokkaebistore_20230130163909.xlsx"
     )
 
-    smartstoreCrawler = SmartStoreCrawler()
-    smartstoreCrawler.setGuiDto(guiDto)
-    # smartstoreCrawler.get_all_product_urls()
-    # smartstoreCrawler.save_img_from_url("asdf", "asdf", product_name=product_detail_dto.product_name)
-    smartstoreCrawler.work_start()
+    ProductCrawlerProcess = ProductCrawlerProcess()
+    ProductCrawlerProcess.setGuiDto(guiDto)
+    # ProductCrawlerProcess.get_all_product_urls()
+    # ProductCrawlerProcess.save_img_from_url("asdf", "asdf", product_name=product_detail_dto.product_name)
+    ProductCrawlerProcess.work_start()

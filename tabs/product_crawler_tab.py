@@ -9,7 +9,8 @@ from PyQt5.QtCore import *
 from datetime import *
 import os
 
-from thread import *
+from threads.product_crawler_thread import ProductDetailSearchThread, ProductListSearchThread
+from dtos.gui_dto import GUIDto
 from common.utils import *
 import webbrowser
 from config import *

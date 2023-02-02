@@ -14,7 +14,7 @@ from dtos.gui_dto import *
 from datetime import timedelta
 import time
 from timeit import default_timer as timer
-from process.smartstore import *
+from process.product_crawler_process import ProductCrawlerProcess
 
 
 # import debugpy
@@ -41,11 +41,11 @@ class ProductListSearchThread(QThread):
 
             start_time = timer()
 
-            smartstoreCrawler = SmartStoreCrawler()
+            productCrawlerProcess = ProductCrawlerProcess()
 
-            smartstoreCrawler.setGuiDto(self.guiDto)
+            productCrawlerProcess.setGuiDto(self.guiDto)
 
-            smartstoreCrawler.get_all_product_urls()
+            productCrawlerProcess.get_all_product_urls()
 
             end_time = timer()
 
@@ -87,13 +87,13 @@ class ProductDetailSearchThread(QThread):
 
             start_time = timer()
 
-            smartstoreCrawler = SmartStoreCrawler()
+            productCrawlerProcess = ProductCrawlerProcess()
 
-            smartstoreCrawler.setGuiDto(self.guiDto)
+            productCrawlerProcess.setGuiDto(self.guiDto)
 
-            smartstoreCrawler.setLogger(self.log_msg)
+            productCrawlerProcess.setLogger(self.log_msg)
 
-            smartstoreCrawler.work_start()
+            productCrawlerProcess.work_start()
 
             end_time = timer()
 
@@ -105,7 +105,7 @@ class ProductDetailSearchThread(QThread):
             print(f"작업 중 오류가 발생했습니다. {str(e)}")
             self.log_msg.emit(f"작업 중 오류가 발생했습니다. {str(e)}")
 
-        self.log_msg.emit(f"{smartstoreCrawler.i} / {smartstoreCrawler.row['상품명']} 상품까지 저장되었습니다.")
+        self.log_msg.emit(f"{ProductCrawlerProcess.i} / {ProductCrawlerProcess.row['상품명']} 상품까지 저장되었습니다.")
 
         self.product_detail_search_finished.emit()
 

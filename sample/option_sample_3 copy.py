@@ -1,0 +1,111 @@
+{
+    "originProduct": {
+        "statusType": "SALE",
+        "saleType": "NEW",
+        "leafCategoryId": "50000408",
+        "name": "아비노 데일리 모이스처라이징 바디로션 1L 코스트코",
+        "images": {
+            "representativeImage": {
+                "url": "http://shop1.phinf.naver.net/20230127_286/1674820983809NBSsj_PNG/3086386621729954_201743718.png"
+            },
+            "optionalImages": [
+                {
+                    "url": "http://shop1.phinf.naver.net/20230127_217/1674821017744AC6cS_PNG/1511486727195132_209108065.png"
+                }
+            ],
+        },
+        "detailContent": '<br /><br />\n <p></p><p></p><p></p>\n <div>\n  <div>\n   <h2></h2>\n   <ul></ul>\n   <ul></ul>\n  </div>\n  <div>\n                        <h2></h2>\n                        <ul></ul>\n                        <ul></ul>\n                </div>\n  <div>\n                        <h2></h2>\n                        <ul></ul>\n                        <ul></ul>\n                </div>\n        <div>\n                        <h2></h2>\n                        <ul></ul>\n                        <ul></ul>\n                </div>\n      <div>\n                        <h2></h2>\n                        <ul></ul>\n                        <ul></ul>\n                </div>\n  <div>\n                        <h2></h2>\n                        <ul></ul>\n                        <ul></ul>\n                </div> \n </div>\n  <br /><br /><table class="table ng-star-inserted"><tbody><tr class="ng-star-inserted"><td class="attrib">용량 또는 중량</td><td class="attrib-val">1L</td></tr><tr class="ng-star-inserted"><td class="attrib">제품 주요 사양</td><td class="attrib-val">모든 피부 타입</td></tr><tr class="ng-star-inserted"><td class="attrib">사용기한 또는 개봉 후 사용기간</td><td class="attrib-val">제조일로부터 36개월</td></tr><tr class="ng-star-inserted"><td class="attrib">사용방법</td><td class="attrib-val">건조함을 느끼는 모든 부위 및 전신에 부드럽게발라주세요. <br />\n사용 시 펌프에 표시된 방향으로 회전하여 사용하세요. 펌프가 튀어나오지 않습니다. <br />\n펌프가 헛도는 경우 뚜껑이 꼭 잠겨져 있는지 확인하시고 사용하세요.</td></tr><tr class="ng-star-inserted"><td class="attrib">화장품제조업자, 화장품책임판매업자 및 맞춤형화장품판매업자</td><td class="attrib-val">한국존슨앤드존슨판매 유한회사</td></tr><tr class="ng-star-inserted"><td class="attrib">제조국</td><td class="attrib-val">대한민국</td></tr><tr class="ng-star-inserted"><td class="attrib">화장품법에 따라 기재.표시하여야 하는 모든성분</td><td class="attrib-val">[무향]<br />\n정제수, 글리세린, 다이스테아릴다이모늄클로라이드, 페트롤라툼, 세틸알코올, 아이소프로필팔미테이트, 다이메티콘, 귀리커넬가루, 카프릴릴글라이콜, 글리세릴스테아레이트,소듐클로라이드<br />\n\n[자몽향]<br />\n정제수, 글리세린, 다이스테아릴다이모늄클로라이드, 페트롤라툼, 아이소프로필팔미테이트, 세틸알코올,다이메티콘, 귀리커넬가루, 벤질알코올, 향료, 소듐클로라이드, 리모넨, 리날룰, 헥실신남알</td></tr><tr class="ng-star-inserted"><td class="attrib">화장품법에 따른 기능성 화장품의 경우 화장품법에 따른 기능성 화장품 심사(또는 보고)를 필함의 문구</td><td class="attrib-val">해당사항 없음</td></tr><tr class="ng-star-inserted"><td class="attrib">사용할 때 주의사항</td><td class="attrib-val">1. 화장품 사용 시 또는 사용 후 직사광선에 의하여 사용부위가 붉은 반점, 부어오름 또는 가려움증 등의 이상 증상이나 부작용이 있는 경우 전문의 등과 상담할 것 <br />2. 상처가 있는 부위 등에는 사용을 자제할 것<br />3. 눈에 들어갔을 때에는 즉시 씻어낼 것<br />4. 사용 후 물로 씻어내지 않으면 탈모 또는 탈색의 원인이 될 수 있으므로 주의할 것<br />5. 보관 및 취급 시의 주의사항<br />가) 어린이의 손이 닿지 않는 곳에 보관할 것<br />나) 직사광선을 피해서 보관할 것</td></tr><tr class="ng-star-inserted"><td class="attrib">품질보증기준</td><td class="attrib-val">관련 법령 및 공정거래위원회의 소비자분쟁해결기준에 따름</td></tr><tr class="ng-star-inserted"><td class="attrib">소비자 상담관련 전화번호</td><td class="attrib-val">존슨앤존슨 아비노 CS 080-023-1414</td></tr></tbody></table><div style="text-align: center;"><br /><h2> - 아비노 데일리 모이스처라이징 바디로션 1L - 자몽향 - </h2><img src="http://shop1.phinf.naver.net/20230127_286/1674820983809NBSsj_PNG/3086386621729954_201743718.png" alt="아비노 데일리 모이스처라이징 바디로션 1L - 자몽향" /></div><div style="text-align: center;"><br /><h2> - 아비노 데일리 모이스처라이징 바디로션 1L - 무향 - </h2><img src="http://shop1.phinf.naver.net/20230127_217/1674821017744AC6cS_PNG/1511486727195132_209108065.png" alt="아비노 데일리 모이스처라이징 바디로션 1L - 무향" /></div>',
+        "salePrice": 27210,
+        "stockQuantity": 4,
+        "deliveryInfo": {
+            "deliveryType": "DELIVERY",
+            "deliveryAttributeType": "NORMAL",
+            "deliveryCompany": "CJGLS",
+            "deliveryBundleGroupUsable": True,
+            "deliveryBundleGroupId": 53641574,
+            "deliveryFee": {"deliveryFeeType": "FREE", "baseFee": 0},
+            "claimDeliveryInfo": {
+                "returnDeliveryCompanyPriorityType": "PRIMARY",
+                "returnDeliveryFee": 3500,
+                "exchangeDeliveryFee": 7000,
+                "shippingAddressId": 105264847,
+                "returnAddressId": 105264847,
+                "freeReturnInsuranceYn": False,
+            },
+            "installationFee": False,
+            "customProductAfterOrderYn": False,
+        },
+        "detailAttribute": {
+            "afterServiceInfo": {
+                "afterServiceTelephoneNumber": "010-9938-6536",
+                "afterServiceGuideContent": "문의사항은 해당 전화번호로 연락주십시요",
+            },
+            "originAreaInfo": {"originAreaCode": "04", "content": "상품상세참조", "plural": False},
+            "sellerCodeInfo": {"sellerManagementCode": "CO-659217"},
+            "optionInfo": {
+                "simpleOptionSortType": "CREATE",
+                "optionSimple": [],
+                "optionCustom": [],
+                "optionCombinationSortType": "CREATE",
+                "optionCombinationGroupNames": {"optionGroupName1": "선택1"},
+                "optionCombinations": [
+                    {
+                        "id": 28875979439,
+                        "optionName1": "자몽향",
+                        "stockQuantity": 2,
+                        "price": 0,
+                        "sellerManagerCode": "CO-659217-C",
+                        "usable": True,
+                    },
+                    {
+                        "id": 28875979441,
+                        "optionName1": "무향",
+                        "stockQuantity": 2,
+                        "price": 0,
+                        "sellerManagerCode": "CO-659217-FF",
+                        "usable": True,
+                    },
+                ],
+                "standardOptionGroups": [],
+                "useStockManagement": True,
+                "optionDeliveryAttributes": [],
+            },
+            "supplementProductInfo": {"sortType": "CREATE", "supplementProducts": []},
+            "purchaseReviewInfo": {"purchaseReviewExposure": True},
+            "taxType": "TAX",
+            "certificationTargetExcludeContent": {},
+            "sellerCommentUsable": False,
+            "minorPurchasable": True,
+            "productInfoProvidedNotice": {
+                "productInfoProvidedNoticeType": "FOOD",
+                "food": {
+                    "returnCostReason": "0",
+                    "noRefundReason": "0",
+                    "qualityAssuranceStandard": "0",
+                    "compensationProcedure": "0",
+                    "troubleShootingContents": "0",
+                    "foodItem": "상품상세참조",
+                    "weight": "상품 상세참조",
+                    "amount": "상품상세참조",
+                    "size": "상품상세참조",
+                    "packDateText": "상품상세참조",
+                    "consumptionDateText": "상품상세참조",
+                    "producer": "상품상세참조",
+                    "relevantLawContent": "상품상세참조",
+                    "productComposition": "상품상 세참조",
+                    "keep": "상품상세참조",
+                    "adCaution": "상품상세참조",
+                    "customerServicePhoneNumber": "상품상세참조",
+                },
+            },
+            "itselfProductionProductYn": True,
+            "brandCertificationYn": False,
+        },
+        "customerBenefit": {},
+    },
+    "smartstoreChannelProduct": {
+        "storeKeepExclusiveProduct": False,
+        "naverShoppingRegistration": False,
+        "channelProductDisplayStatusType": "ON",
+    },
+}
