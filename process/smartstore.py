@@ -17,6 +17,7 @@ from common.utils import global_log_append
 from config import TODAY_OUTPUT_FOLDER
 from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
+import urllib.request
 import re
 
 
@@ -34,13 +35,40 @@ class SmartStoreCrawler:
     def setLogger(self, log_msg):
         self.log_msg = log_msg
 
-    def to_excel(self, products):
+    def save_img_from_url(self, url: str, file_name: str, product_name: str):
+
+        store_name = "store_name"
+        try:
+            store_name = self.guiDto.product_list_excel_file[
+                self.guiDto.product_list_excel_file.rfind("/") + 1 : self.guiDto.product_list_excel_file.rfind("_상품목록")
+            ]
+        except Exception as e:
+            pass
+
+        image_path = os.path.join(TODAY_OUTPUT_FOLDER, store_name)
+        print(image_path)
+        if not os.path.isdir(image_path):
+            os.mkdir(image_path)
+
+        product_path = os.path.join(image_path, product_name)
+        print(product_path)
+        if not os.path.isdir(product_path):
+            os.mkdir(product_path)
+
+        file_name = os.path.join(product_path, file_name)
+        try:
+            urllib.request.urlretrieve(f"{url}", f"{file_name}")
+        except Exception as e:
+            print(f"{url} 이미지 생성 실패")
+        time.sleep(0.2)
+
+    def all_product_url_to_excel(self, products):
         now = datetime.now().strftime("%Y%m%d%H%M%S")
         store_name = self.guiDto.store_url.split("/")[-1]
         product_excel = os.path.join(TODAY_OUTPUT_FOLDER, f"{store_name}_상품목록_{now}.xlsx")
         pd.DataFrame.from_dict(products).to_excel(product_excel, index=False)
 
-    def save_to_excel(self, products):
+    def product_detail_to_excel(self, products):
         store_name = self.guiDto.product_list_excel_file.split("_")[0]
         product_excel = os.path.join(TODAY_OUTPUT_FOLDER, f"{store_name}_상품상세정보.xlsx")
         pd.DataFrame.from_dict(products).to_excel(product_excel, index=False)
@@ -80,12 +108,16 @@ class SmartStoreCrawler:
                 )
                 product_url_dto.product_url = product_link.get_attribute("href")
                 print(f"{product_url_dto.product_name} {product_url_dto.product_url}")
-                product_url_list.append(product_url_dto.get_dict())
+
+                if re.search('[\/:*?"<>|]', product_url_dto.product_name) == None:
+                    product_url_list.append(product_url_dto.get_dict())
+                else:
+                    print(f"파일명에 사용할 수 없는 특수문자 포함")
 
             current_page += 1
 
         # 데이터 저장
-        self.to_excel(product_url_list)
+        self.all_product_url_to_excel(product_url_list)
 
         # 크롬 드라이버 종료
         self.driver.quit()
@@ -160,32 +192,51 @@ class SmartStoreCrawler:
 
         # 메인이미지
         try:
+            file_name = ""
             product_main_img = (
                 driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]').get_attribute("src").rsplit("?")[0]
             )
             product_main_img = self.encode_url(product_main_img)
-            print(f"main_img: {product_main_img}")
-            product_detail_dto.product_main_img = product_main_img
+            if product_main_img.find("shop-phinf.pstatic.net") <= -1:
+                raise Exception(f"{product_main_img} 메인이미지 획득 실패")
+            img_format = product_main_img[product_main_img.rfind(".") :]
+            file_name = f"{product_detail_dto.product_name}_메인이미지{img_format}"
+            self.save_img_from_url(
+                url=product_main_img, file_name=file_name, product_name=product_detail_dto.product_name
+            )
+            print(f"main_img: {file_name}")
+            product_detail_dto.product_main_img = file_name
         except Exception as e:
-            pass
+            print(e)
+            print(f"메인이미지 오류")
+        finally:
+            product_detail_dto.product_main_img = file_name
 
         # 추가이미지
         try:
-            driver.implicitly_wait(1)
             product_optional_imgs = []
+            driver.implicitly_wait(1)
             optional_imgs = driver.find_elements(
                 By.XPATH, '//img[contains(@alt, "추가이미지") and not(contains(@alt, "0"))]'
             )
-            for optional_img in optional_imgs:
+            for i, optional_img in enumerate(optional_imgs):
                 optional_img = optional_img.get_attribute("src").rsplit("?")[0]
                 optional_img = self.encode_url(optional_img)
-                product_optional_imgs.append(optional_img)
+                if optional_img.find("shop-phinf.pstatic.net") <= -1:
+                    print(f"{optional_img} 추가이미지 획득 실패")
+                    continue
+                img_format = optional_img[optional_img.rfind(".") :]
+                file_name = f"{product_detail_dto.product_name}_추가이미지_{i}{img_format}"
+                self.save_img_from_url(
+                    url=optional_img, file_name=file_name, product_name=product_detail_dto.product_name
+                )
+                product_optional_imgs.append(file_name)
             print(f"optional_imgs: {product_optional_imgs}")
-            product_detail_dto.product_optional_imgs = product_optional_imgs
         except Exception as e:
             print(e)
         finally:
             driver.implicitly_wait(self.default_wait)
+            product_detail_dto.product_optional_imgs = product_optional_imgs
 
         # 옵션
         # a tag 클릭 시 옵션이 들어있는 ul tag가 나온다.
@@ -354,24 +405,33 @@ class SmartStoreCrawler:
             print()
 
         # 상세이미지 -> 화면상에 나타나지 않으면 이미지 src가 비정상적으로 출력됨 -> 한번씩 화면에 비춰줘야 정상적인 이미지 주소가 나옴
+
         try:
-            driver.implicitly_wait(1)
             product_detail_imgs = []
+            driver.implicitly_wait(1)
             detail_imgs = driver.find_elements(
                 By.XPATH, '//div[@class="se-main-container"]//a[@data-linktype="img"]//img'
             )
-            for detail_img in detail_imgs:
+            for i, detail_img in enumerate(detail_imgs):
                 actions = ActionChains(driver).move_to_element(detail_img)
                 actions.perform()
                 detail_img = detail_img.get_attribute("src").rsplit("?")[0]
                 detail_img = self.encode_url(detail_img)
-                product_detail_imgs.append(detail_img)
+                if detail_img.find("shop-phinf.pstatic.net") <= -1:
+                    print(f"{detail_img} 상세이미지 획득 실패")
+                    continue
+                img_format = detail_img[detail_img.rfind(".") :]
+                file_name = f"{product_detail_dto.product_name}_상세이미지_{i}{img_format}"
+                self.save_img_from_url(
+                    url=detail_img, file_name=file_name, product_name=product_detail_dto.product_name
+                )
+                product_detail_imgs.append(file_name)
             print(f"detail_imgs: {product_detail_imgs}")
-            product_detail_dto.product_detail_imgs = product_detail_imgs
         except Exception as e:
             print(e)
         finally:
             driver.implicitly_wait(self.default_wait)
+            product_detail_dto.product_detail_imgs = product_detail_imgs
 
         return product_detail_dto
 
@@ -387,10 +447,6 @@ class SmartStoreCrawler:
         for self.i, self.row in df_product_url.iterrows():
 
             try:
-                # 테스트용 갯수 제한
-                # if i >= 10:
-                #     print(f"작업 종료")
-                #     break
                 product_name = str(self.row["상품명"])
                 product_url = str(self.row["상품URL"])
 
@@ -399,7 +455,7 @@ class SmartStoreCrawler:
 
                 print(f"{product_detail_dto.product_name}")
                 productDetailDtos.append(product_detail_dto.get_dict())
-                self.save_to_excel(productDetailDtos)
+                self.product_detail_to_excel(productDetailDtos)
                 time.sleep(1)
 
                 print(f"{self.i} / {product_name} 저장")
@@ -411,7 +467,7 @@ class SmartStoreCrawler:
                 global_log_append(str(e))
                 continue
 
-        self.save_to_excel(productDetailDtos)
+        # self.product_detail_to_excel(productDetailDtos)
 
         print(f"{self.i} / {product_name} 상품까지 저장되었습니다.")
 
@@ -452,4 +508,5 @@ if __name__ == "__main__":
     smartstoreCrawler = SmartStoreCrawler()
     smartstoreCrawler.setGuiDto(guiDto)
     # smartstoreCrawler.get_all_product_urls()
+    # smartstoreCrawler.save_img_from_url("asdf", "asdf", product_name=product_detail_dto.product_name)
     smartstoreCrawler.work_start()

@@ -77,16 +77,26 @@ class ProductDetailDto:
         return self.__product_optional_imgs
 
     @product_optional_imgs.setter
-    def product_optional_imgs(self, value: str):  # setter
-        self.__product_optional_imgs = value
+    def product_optional_imgs(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ",".join(value)
+
+        self.__product_optional_imgs = list_to_str
 
     @property
     def product_detail_imgs(self):  # getter
         return self.__product_detail_imgs
 
     @product_detail_imgs.setter
-    def product_detail_imgs(self, value: str):  # setter
-        self.__product_detail_imgs = value
+    def product_detail_imgs(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ",".join(value)
+
+        self.__product_detail_imgs = list_to_str
 
     @property
     def product_option(self):  # getter
