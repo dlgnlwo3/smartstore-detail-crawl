@@ -27,7 +27,7 @@ class productEnum(Enum):
                 "deliveryType": "DELIVERY",  # 배송 방법 유형 코드 -> DELIVERY(택배, 소포, 등기), DIRECT(직접배송(화물배달))
                 "deliveryAttributeType": "NORMAL",  # 배송 속성 타입 코드 -> NORMAL(일반 배송), TODAY(오늘출발)
                 "deliveryCompany": "string",  # 택배사코드
-                "deliveryBundleGroupUsable": True,  # 묶음배송 가능 여부
+                "deliveryBundleGroupUsable": False,  # 묶음배송 가능 여부
                 "deliveryBundleGroupId": None,  # 묶음배송 그룹 코드 -> 묶음배송 가능이 true이고 묶음배송 그룹 코드가 null이면 기본 그룹으로 저장됩니다.
                 "deliveryFee": {
                     "deliveryFeeType": "FREE",  # 배송비 타입 -> FREE(무료), CONDITIONAL_FREE(조건부 무료), PAID(유료)
@@ -39,7 +39,7 @@ class productEnum(Enum):
                     # "differentialFeeByArea": "string",
                 },
                 "claimDeliveryInfo": {
-                    "returnDeliveryCompanyPriorityType": "PRIMARY",  # 반품 택배사 우선순위 타입 -> 미입력 시 '기본 반품 택배사(PRIMARY)'로 설정됩니다.
+                    "returnDeliveryCompanyPriorityType": "PRIMARY",  # 반품 택배사 우선순위 타입 -> 미입력 시 '기본 반품 택배사(PRIMARY)'로 설정됩니다. -> 네이버에서 설정된 기본 반품 배송지는 '한진택배'입니다.
                     "returnDeliveryFee": 3500,  # 반품 배송비 -> (배송비)
                     "exchangeDeliveryFee": 7000,  # 교환 배송비 -> (배송비*2)
                     # "shippingAddressId": '',  # 출고지 주소록 번호
