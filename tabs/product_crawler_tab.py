@@ -15,8 +15,6 @@ from common.utils import *
 import webbrowser
 from config import *
 
-# pyinstaller --onefile --noconsole -n "플레이오토 가격수정 1.0.7" --clean "main.py" --icon "assets\cancel.ico"
-
 
 class ProductCrawlerUI(QWidget):
 
@@ -132,7 +130,8 @@ class ProductCrawlerUI(QWidget):
         # 상품목록 그룹박스
         product_list_groupbox = QGroupBox("상품목록 크롤링")
         self.store_url_label = QLabel(f"상점주소")
-        self.store_url = QLineEdit("https://smartstore.naver.com/dokkaebistore")
+        # self.store_url = QLineEdit("https://smartstore.naver.com/dokkaebistore")
+        self.store_url = QLineEdit("")
         self.product_list_search_start_button = QPushButton("검색시작")
         self.product_list_search_stop_button = QPushButton("중지")
         self.product_list_search_stop_button.setDisabled(True)

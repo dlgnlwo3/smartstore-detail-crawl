@@ -19,6 +19,7 @@ from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 import urllib.request
 import re
+from common.image_util import remove_bg
 
 
 class ProductCrawlerProcess:
@@ -55,12 +56,27 @@ class ProductCrawlerProcess:
         if not os.path.isdir(product_path):
             os.mkdir(product_path)
 
-        file_name = os.path.join(product_path, file_name)
+        temp_file_name = f"temp_{file_name}"
+        temp_file_path = os.path.join(product_path, temp_file_name)
         try:
-            urllib.request.urlretrieve(f"{url}", f"{file_name}")
+            urllib.request.urlretrieve(url, temp_file_path)
+            time.sleep(0.5)
+            file_name = file_name.replace(".jpg", ".png").replace(".jpeg", ".png")
+            file_path = os.path.join(product_path, file_name)
+            remove_bg(temp_file_path, file_path)
+
+            time.sleep(0.5)
+
         except Exception as e:
             print(f"{url} 이미지 생성 실패")
-        time.sleep(0.2)
+
+        finally:
+            if os.path.isfile(temp_file_path):
+                os.remove(temp_file_path)
+
+            time.sleep(0.2)
+
+        return file_name
 
     def all_product_url_to_excel(self, products):
         now = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -200,8 +216,9 @@ class ProductCrawlerProcess:
             if product_main_img.find("shop-phinf.pstatic.net") <= -1:
                 raise Exception(f"{product_main_img} 메인이미지 획득 실패")
             img_format = product_main_img[product_main_img.rfind(".") :]
+
             file_name = f"{product_detail_dto.product_name}_메인이미지{img_format}"
-            self.save_img_from_url(
+            file_name = self.save_img_from_url(
                 url=product_main_img, file_name=file_name, product_name=product_detail_dto.product_name
             )
             print(f"main_img: {file_name}")
@@ -227,7 +244,7 @@ class ProductCrawlerProcess:
                     continue
                 img_format = optional_img[optional_img.rfind(".") :]
                 file_name = f"{product_detail_dto.product_name}_추가이미지_{i}{img_format}"
-                self.save_img_from_url(
+                file_name = self.save_img_from_url(
                     url=optional_img, file_name=file_name, product_name=product_detail_dto.product_name
                 )
                 product_optional_imgs.append(file_name)
@@ -408,25 +425,25 @@ class ProductCrawlerProcess:
 
         try:
             product_detail_imgs = []
-            driver.implicitly_wait(1)
-            detail_imgs = driver.find_elements(
-                By.XPATH, '//div[@class="se-main-container"]//a[@data-linktype="img"]//img'
-            )
-            for i, detail_img in enumerate(detail_imgs):
-                actions = ActionChains(driver).move_to_element(detail_img)
-                actions.perform()
-                detail_img = detail_img.get_attribute("src").rsplit("?")[0]
-                # detail_img = self.encode_url(detail_img)
-                if detail_img.find("shop-phinf.pstatic.net") <= -1:
-                    print(f"{detail_img} 상세이미지 획득 실패")
-                    continue
-                img_format = detail_img[detail_img.rfind(".") :]
-                file_name = f"{product_detail_dto.product_name}_상세이미지_{i}{img_format}"
-                self.save_img_from_url(
-                    url=detail_img, file_name=file_name, product_name=product_detail_dto.product_name
-                )
-                product_detail_imgs.append(file_name)
-            print(f"detail_imgs: {product_detail_imgs}")
+            # driver.implicitly_wait(1)
+            # detail_imgs = driver.find_elements(
+            #     By.XPATH, '//div[@class="se-main-container"]//a[@data-linktype="img"]//img'
+            # )
+            # for i, detail_img in enumerate(detail_imgs):
+            #     actions = ActionChains(driver).move_to_element(detail_img)
+            #     actions.perform()
+            #     detail_img = detail_img.get_attribute("src").rsplit("?")[0]
+            #     # detail_img = self.encode_url(detail_img)
+            #     if detail_img.find("shop-phinf.pstatic.net") <= -1:
+            #         print(f"{detail_img} 상세이미지 획득 실패")
+            #         continue
+            #     img_format = detail_img[detail_img.rfind(".") :]
+            #     file_name = f"{product_detail_dto.product_name}_상세이미지_{i}{img_format}"
+            #     file_name = self.save_img_from_url(
+            #         url=detail_img, file_name=file_name, product_name=product_detail_dto.product_name
+            #     )
+            #     product_detail_imgs.append(file_name)
+            # print(f"detail_imgs: {product_detail_imgs}")
         except Exception as e:
             print(e)
         finally:

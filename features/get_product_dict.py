@@ -171,7 +171,7 @@ class GetProductDict:
 
         if body is None:
             print(f"html 태그가 아닙니다.")
-            detailContent = f"{image_tag}"
+            detailContent = f"<br /> <p style='text-align: center;'> <img src='{commonDto.representativeImageUrl}' alt='' class='se-image-resource'> </p>{image_tag}"
         else:
             print(f"html 태그 입니다.")
             detailContent = commonDto.detailContent

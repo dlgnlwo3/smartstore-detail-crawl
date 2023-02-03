@@ -11,7 +11,7 @@ from PyQt5.QtCore import pyqtSignal, QThread
 from dtos.gui_dto import GUIDto
 from process.product_uploader_process import ProductUploaderProcess
 
-import debugpy
+# import debugpy
 
 # store
 class ProductUploaderThread(QThread):
@@ -29,7 +29,7 @@ class ProductUploaderThread(QThread):
 
     def run(self):
 
-        debugpy.debug_this_thread()
+        # debugpy.debug_this_thread()
 
         self.log_msg.emit(f"작업 시작")
 
