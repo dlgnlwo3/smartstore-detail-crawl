@@ -3,7 +3,7 @@ import shutil
 from datetime import datetime
 
 COMPANY_NAME = "consolework"
-PROGRAM_ID = "playauto_excel"
+PROGRAM_ID = "smartstore-detail-crawl"
 APP_DATA_PATH = os.path.join(os.getenv("APPDATA"), COMPANY_NAME)
 
 if os.path.isdir(APP_DATA_PATH) == False:

@@ -9,14 +9,14 @@ if 1 == 1:
 from common.utils import global_log_append
 from dtos.common_dto import CommonDto
 
-# from common.dietfood_enum import DietFoodInfo
+from enums.product_enum import productEnum
 import time
 import re
 
 
 class GetProductDict:
     def __init__(self):
-        # self.product = DietFoodInfo.코스트호.value
+        self.product = productEnum.PRODUCT.value
         print()
 
     def get_product(self, commonDto: CommonDto):

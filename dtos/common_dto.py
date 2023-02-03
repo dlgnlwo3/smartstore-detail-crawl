@@ -95,7 +95,7 @@ class CommonDto:
     def representativeImage(self, value):  # setter
 
         if value != "":
-            value = os.path.join(self.media_path, value)
+            value = os.path.join(self.media_path, self.name, value)
 
         self.__representativeImage = value
 
@@ -109,7 +109,7 @@ class CommonDto:
         if value != "":
             option_imgs = value.split(",")
             for option_img in option_imgs:
-                option_img_list.append(os.path.join(self.media_path, option_img))
+                option_img_list.append(os.path.join(self.media_path, self.name, option_img))
         self.__optionalImages = option_img_list
 
     @property
@@ -122,7 +122,7 @@ class CommonDto:
         if value != "":
             detail_imgs = value.split(",")
             for detail_img in detail_imgs:
-                detail_img_list.append(os.path.join(self.media_path, detail_img))
+                detail_img_list.append(os.path.join(self.media_path, self.name, detail_img))
         self.__detailImages = detail_img_list
 
     @property

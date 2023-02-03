@@ -17,6 +17,7 @@ from common.utils import global_log_append
 from tabs.product_crawler_tab import ProductCrawlerUI
 from tabs.product_uploader_tab import ProductUploaderUI
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from config import *
 
 
 # 오류 발생 시 프로그램 강제종료 방지
@@ -35,6 +36,8 @@ class MainUI(QWidget):
 
     # 초기화
     def __init__(self):
+
+        print(f"APP_DATA_PATH: {APP_DATA_PATH}")
 
         # 로그 폴더
         self.log_path = os.path.join(os.getcwd(), "log")

@@ -39,11 +39,11 @@ class ProductUploaderThread(QThread):
         self.media_path = self.guiDto.media_path
 
         try:
-            ProductUploaderProcess = ProductUploaderProcess(self.log_msg)
+            productUploaderProcess = ProductUploaderProcess(self.log_msg)
 
-            ProductUploaderProcess.setGuiDto(self.guiDto)
+            productUploaderProcess.setGuiDto(self.guiDto)
 
-            ProductUploaderProcess.work_start()
+            productUploaderProcess.work_start()
 
         except Exception as e:
             print(e)
