@@ -74,6 +74,7 @@ class CommerceAPI:
 
         await asyncio.sleep(1)
 
+    # 상품번호 조회
     def get_product(self, channelProductNo):
         import http.client
 
@@ -88,6 +89,49 @@ class CommerceAPI:
         data = json.loads(txt)
         return data
 
+    # 모든 카테고리 조회
+    def get_all_category(self):
+        api_url = "https://api.commerce.naver.com/external/v1/categories"
+        headers = self.get_headers()
+        upload_result = requests.get(api_url, headers=headers)
+        result_text = upload_result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+        return res_json
+
+    # 주소록 조회
+    def search_addr(self):
+        headers = self.get_headers()
+        api_url = "https://api.commerce.naver.com/external/v1/seller/addressbooks-for-page?page=1"
+        upload_result = requests.get(api_url, headers=headers)
+        result_text = upload_result.text
+        res_json = json.loads(result_text)
+        addressBooks = res_json["addressBooks"]
+
+        print("==주소록==")
+        for addr in addressBooks:
+            if str(addr["name"]).find("빅스타") > -1:
+                print(addr)
+                # print(addr["addressBookNo"], addr["name"])
+        print()
+
+        return addressBooks
+
+    # 묶음배송그룹 조회
+    def delivery_bundle_group(self):
+        headers = self.get_headers()
+        api_url = "https://api.commerce.naver.com/external/v1/product-delivery-info/bundle-groups?base_group=true"
+        upload_result = requests.get(api_url, headers=headers)
+        result_text = upload_result.text
+        res_json = json.loads(result_text)
+
+        print("==묶음배송그룹==")
+        bundle_groups = res_json["contents"]
+        for group in bundle_groups:
+            print(group["id"], group["name"])
+
+        return bundle_groups
+
+    # 상품 업로드
     def add_product(self, originProduct: dict):
         print("product_add")
         result = False
@@ -120,10 +164,19 @@ if __name__ == "__main__":
 
     product_test = 7984456905
 
-    # 상품 조회
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
-    data = searchBot.get_product(product_test)
+    # 상품 조회
+    # data = searchBot.get_product(product_test)
+
+    # 모든 카테고리 조회
+    # data = searchBot.get_all_category()
+
+    # 주소록 조회
+    # data = searchBot.search_addr()
+
+    # 묶음배송그룹 조회
+    data = searchBot.delivery_bundle_group()
 
     print(data)
 
