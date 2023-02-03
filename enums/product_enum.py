@@ -9,7 +9,7 @@ from enum import Enum
 
 class productEnum(Enum):
 
-    코스트호 = {
+    PRODUCT = {
         "originProduct": {
             "statusType": "SALE",  # 상품 판매 상태 코드 -> 상품 등록 시에는 SALE만 입력 가능
             "saleType": "NEW",  # 상품 판매 유형 코드 -> NEW(새 상품), OLD(중고 상품)
@@ -42,8 +42,8 @@ class productEnum(Enum):
                     "returnDeliveryCompanyPriorityType": "PRIMARY",  # 반품 택배사 우선순위 타입 -> 미입력 시 '기본 반품 택배사(PRIMARY)'로 설정됩니다.
                     "returnDeliveryFee": 3500,  # 반품 배송비 -> (배송비)
                     "exchangeDeliveryFee": 7000,  # 교환 배송비 -> (배송비*2)
-                    "shippingAddressId": 105264847,  # 출고지 주소록 번호
-                    "returnAddressId": 105264847,  # 반품/교환지 주소록 번호
+                    # "shippingAddressId": '',  # 출고지 주소록 번호
+                    # "returnAddressId": '',  # 반품/교환지 주소록 번호
                     "freeReturnInsuranceYn": False,  # 반품안심케어 설정
                 },
                 "installationFee": False,  # 별도 설치비 유무
@@ -52,8 +52,8 @@ class productEnum(Enum):
             "detailAttribute": {
                 # A/S전화번호, A/S안내
                 "afterServiceInfo": {
-                    "afterServiceTelephoneNumber": "010-9938-6536",
-                    "afterServiceGuideContent": "문의사항은 해당 전화번호로 연락주십시요",
+                    "afterServiceTelephoneNumber": "010-1234-5678",
+                    "afterServiceGuideContent": "A/S 관련 안내 사항입니다.",
                 },
                 # 원산지 정보
                 "originAreaInfo": {"originAreaCode": "04", "content": "상세설명에 표시", "plural": False},
@@ -105,7 +105,7 @@ class productEnum(Enum):
         },
     }
 
-    PRODUCT = {
+    코스트호 = {
         "originProduct": {
             "statusType": "SALE",  # 상품 판매 상태 코드 -> 상품 등록 시에는 SALE만 입력 가능
             "saleType": "NEW",  # 상품 판매 유형 코드 -> NEW(새 상품), OLD(중고 상품)

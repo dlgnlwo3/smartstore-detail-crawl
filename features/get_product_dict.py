@@ -20,7 +20,7 @@ from features.get_notice_from_category_code import CategoryCodeConverter
 
 class GetProductDict:
     def __init__(self):
-        self.product = productEnum.코스트호.value
+        self.product = productEnum.PRODUCT.value
         print()
 
     def get_product(self, commonDto: CommonDto):
@@ -31,7 +31,7 @@ class GetProductDict:
         # 이미지 정보
         images: dict = originProduct["images"]
         # 할인율
-        customerBenefit: dict = originProduct["customerBenefit"]
+        # customerBenefit: dict = originProduct["customerBenefit"]
         # 원상품 상세 속성
         detailAttribute: dict = originProduct["detailAttribute"]
         # 옵션 정보

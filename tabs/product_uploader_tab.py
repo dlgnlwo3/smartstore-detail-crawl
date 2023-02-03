@@ -13,8 +13,6 @@ from threads.product_uploader_thread import ProductUploaderThread
 from common.utils import *
 from config import *
 
-# pyinstaller --onefile --noconsole -n "플레이오토 가격수정 1.0.7" --clean "main.py" --icon "assets\cancel.ico"
-
 
 class ProductUploaderUI(QWidget):
 
