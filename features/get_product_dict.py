@@ -76,37 +76,7 @@ class GetProductDict:
         if commonDto.have_option:
             optionCombinationGroupNames = self.convert_option_group(commonDto)
             optionCombinations = self.convert_option_combinations(commonDto)
-            # # ★ 옵션 정보 ★
-            # "optionInfo": {
-            #     # 단독형 옵션
-            #     "simpleOptionSortType": "CREATE",
-            #     "optionSimple": [],
-            #     "optionCustom": [],
-            #     # 조합형 옵션
-            #     "optionCombinationSortType": "CREATE",
-            #     # 조합형 옵션명 목록 optionGroupName1... optionGroupName2...
-            #     "optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"},
-            #     # 조합형 옵션
-            #     "optionCombinations": [
-            #         {
-            #             "id": 0,  # 옵션 ID
-            #             "optionName1": "string",  # 옵션값 1
-            #             "optionName2": "string",  # 옵션값 2
-            #             "optionName3": "string",  # 옵션값 3
-            #             # "optionName4": "string",  # 지점형 옵션에만 사용 -> 사용 안함
-            #             "stockQuantity": 0,  # 옵션별 재고 -> 미입력 시 0개
-            #             "price": 0,  # 옵션가
-            #             "sellerManagerCode": "string",  # 판매자 관리 코드
-            #             "usable": True,  # 사용여부
-            #         },
-            #     ],
-            #     "standardOptionGroups": [],
-            #     "useStockManagement": True,  # 옵션 재고 수량 관리 사용 여부
-            #     "optionDeliveryAttributes": [],  # 옵션별 배송 속성 옵션값 목록
-            # },
-
             optionInfo.update(optionCombinationGroupNames)
-
             optionInfo.update({"optionCombinations": optionCombinations})
 
         print()
@@ -201,7 +171,7 @@ class GetProductDict:
 
         if body is None:
             print(f"html 태그가 아닙니다.")
-            detailContent = f'<p><span style="font-size: 12pt; font-family: &quot;나눔고딕&quot;,NanumGothic; color: rgb(53,56,151)"><strong><br /><br />상세설명 테스트<br />상품 품절시 (발송불가) 문자나 전화로 안내를 드리고 취소진행을 해드리고있습니다.<br />구매시 참고바랍니다. <br /><br /><br />{commonDto.name}</strong></span></p><br /><br /><p style="line-height: 3"><strong>각종 정보 입력<br />br태그로 행 구분 <br />ㅇㅇ <br />1234 <br /> </strong><br /></p><p><span style="font-size: 15pt; font-family: &quot;나눔고딕&quot;,NanumGothic; color: rgb(53,56,151)"><strong>소개</strong></span></p><br />{commonDto.detailContent}<br /><br /><br /><p><span style="font-size: 15pt; font-family: &quot;나눔고딕&quot;,NanumGothic; color: rgb(53,56,151)">  </span></p><br /> {image_tag} <br /><p><span style="font-size: 15pt; font-family: &quot;나눔고딕&quot;,NanumGothic; color: rgb(53,56,151)"></span></p><br /><br />'
+            detailContent = f"{image_tag}"
         else:
             print(f"html 태그 입니다.")
             detailContent = commonDto.detailContent
