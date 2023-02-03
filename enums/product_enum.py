@@ -28,7 +28,7 @@ class productEnum(Enum):
                 "deliveryAttributeType": "NORMAL",  # 배송 속성 타입 코드 -> NORMAL(일반 배송), TODAY(오늘출발)
                 "deliveryCompany": "string",  # 택배사코드
                 "deliveryBundleGroupUsable": True,  # 묶음배송 가능 여부
-                "deliveryBundleGroupId": int,  # 묶음배송 그룹 코드 -> 묶음배송 가능이 true이고 묶음배송 그룹 코드가 null이면 기본 그룹으로 저장됩니다.
+                "deliveryBundleGroupId": None,  # 묶음배송 그룹 코드 -> 묶음배송 가능이 true이고 묶음배송 그룹 코드가 null이면 기본 그룹으로 저장됩니다.
                 "deliveryFee": {
                     "deliveryFeeType": "FREE",  # 배송비 타입 -> FREE(무료), CONDITIONAL_FREE(조건부 무료), PAID(유료)
                     "baseFee": 0,  # 기본 배송비

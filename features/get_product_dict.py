@@ -10,23 +10,36 @@ from common.utils import global_log_append
 from dtos.common_dto import CommonDto
 
 from enums.product_enum import productEnum
+from features.convert_delivery_company_code import *
 import time
 import re
+import clipboard
+import json
+from enums.product_info_provided_notice_enum import productInfoProvidedNotice
 
 
 class GetProductDict:
     def __init__(self):
-        self.product = productEnum.PRODUCT.value
+        self.product = productEnum.코스트호.value
         print()
 
     def get_product(self, commonDto: CommonDto):
         product = self.product
 
+        # 상품 전체 정보
         originProduct: dict = product["originProduct"]
+        # 이미지 정보
         images: dict = originProduct["images"]
+        # 할인율
         customerBenefit: dict = originProduct["customerBenefit"]
+        # 원상품 상세 속성
         detailAttribute: dict = originProduct["detailAttribute"]
+        # 옵션 정보
+        optionInfo: dict = detailAttribute["optionInfo"]
+        # 배송 정보
         deliveryInfo: dict = originProduct["deliveryInfo"]
+        # 상품정보제공고시
+        productInfoProvidedNotice: dict = detailAttribute["productInfoProvidedNotice"]
 
         # 카테고리
         originProduct.update({"leafCategoryId": commonDto.leafCategoryId})
@@ -38,20 +51,20 @@ class GetProductDict:
         originProduct.update({"salePrice": int(commonDto.salePrice)})
 
         # 할인율
-        customerBenefit.update(
-            {
-                "immediateDiscountPolicy": {
-                    "discountMethod": {
-                        "value": int(commonDto.discountMethod),
-                        "unitType": "PERCENT",
-                    },  # 할인율
-                    "mobileDiscountMethod": {
-                        "value": int(commonDto.discountMethod),
-                        "unitType": "PERCENT",
-                    },  # 할인율
-                }
-            }
-        )
+        # customerBenefit.update(
+        #     {
+        #         "immediateDiscountPolicy": {
+        #             "discountMethod": {
+        #                 "value": int(commonDto.discountMethod),
+        #                 "unitType": "PERCENT",
+        #             },  # 할인율
+        #             "mobileDiscountMethod": {
+        #                 "value": int(commonDto.discountMethod),
+        #                 "unitType": "PERCENT",
+        #             },  # 할인율
+        #         }
+        #     }
+        # )
 
         # 재고수량
         originProduct.update({"stockQuantity": int(commonDto.stockQuantity)})
@@ -71,8 +84,17 @@ class GetProductDict:
         # 미성년자구매
         detailAttribute.update({"minorPurchasable": bool(commonDto.minorPurchasable)})
 
+        # 상품상세정보제공고시
+        if commonDto.leafCategoryId == "":
+            print("상품상세정보제공고시 관련해서 카테고리를 조회해야함")
+
+        productInfoProvidedNotice = productInfoProvidedNotice
+
         # 택배사 코드
-        deliveryInfo.update({"deliveryCompany": f"{commonDto.deliveryCompany}"})
+        deliveryCompany = commonDto.deliveryCompany
+        deliveryCompany = DeliveryCompanyConverter().convert_delivery_company(deliveryCompany)
+        print(deliveryCompany)
+        deliveryInfo.update({"deliveryCompany": f"{deliveryCompany}"})
 
         # 배송비
         if commonDto.baseFee == "" or commonDto.baseFee == "0":
@@ -92,10 +114,11 @@ class GetProductDict:
         detailAttribute.update({"sellerCodeInfo": {"sellerManagementCode": commonDto.sellerManagementCode}})
 
         # 검색설정
-        tags_to_dict = self.get_sellerTags(commonDto.sellerTags)
-        detailAttribute.update({"sellerTags": tags_to_dict})
-
+        # tags_to_dict = self.get_sellerTags(commonDto.sellerTags)
+        # detailAttribute.update({"sellerTags": tags_to_dict})
         print(product)
+
+        clipboard.copy(str(product))
 
         return product
 
