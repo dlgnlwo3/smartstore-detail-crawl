@@ -5,6 +5,8 @@ from datetime import datetime
 COMPANY_NAME = "consolework"
 PROGRAM_ID = "smartstore-detail-crawl"
 APP_DATA_PATH = os.path.join(os.getenv("APPDATA"), COMPANY_NAME)
+EXE_PATH = os.getcwd()
+
 
 if os.path.isdir(APP_DATA_PATH) == False:
     os.mkdir(APP_DATA_PATH)
@@ -23,4 +25,5 @@ TODAY_OUTPUT_FOLDER = os.path.join(os.getcwd(), OUTPUT_FOLDER_NAME, datetime.tod
 if not os.path.isdir(TODAY_OUTPUT_FOLDER):
     os.mkdir(TODAY_OUTPUT_FOLDER)
 
-SMARTSTORE_CATEGORY_FILE = "D:\Consolework\smartstore-detail-crawl\smartstore\스마트스토어_카테고리코드.xls"
+EXCEL_FOLDER_NAME = "smartstore"
+SMARTSTORE_CATEGORY_FILE = os.path.join(os.getcwd(), EXCEL_FOLDER_NAME, "스마트스토어_카테고리코드.xls")

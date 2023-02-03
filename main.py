@@ -38,6 +38,8 @@ class MainUI(QWidget):
     def __init__(self):
 
         print(f"PROGRAM_PATH: {PROGRAM_PATH}")
+        print(f"EXE_PATH: {EXE_PATH}")
+        print(f"SMARTSTORE_CATEGORY_FILE: {SMARTSTORE_CATEGORY_FILE}")
 
         # 로그 폴더
         self.log_path = os.path.join(os.getcwd(), "log")
