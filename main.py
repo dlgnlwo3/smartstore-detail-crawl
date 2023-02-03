@@ -37,7 +37,7 @@ class MainUI(QWidget):
     # 초기화
     def __init__(self):
 
-        print(f"APP_DATA_PATH: {APP_DATA_PATH}")
+        print(f"PROGRAM_PATH: {PROGRAM_PATH}")
 
         # 로그 폴더
         self.log_path = os.path.join(os.getcwd(), "log")

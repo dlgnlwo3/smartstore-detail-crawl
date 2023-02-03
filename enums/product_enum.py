@@ -66,21 +66,9 @@ class productEnum(Enum):
                     # 조합형 옵션
                     "optionCombinationSortType": "CREATE",
                     # 조합형 옵션명 목록 optionGroupName1... optionGroupName2...
-                    "optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"},
+                    # "optionCombinationGroupNames": {},
                     # 조합형 옵션
-                    "optionCombinations": [
-                        {
-                            "id": 0,  # 옵션 ID
-                            "optionName1": "string",  # 옵션값 1
-                            "optionName2": "string",  # 옵션값 2
-                            "optionName3": "string",  # 옵션값 3
-                            # "optionName4": "string",  # 지점형 옵션에만 사용 -> 사용 안함
-                            "stockQuantity": 0,  # 옵션별 재고 -> 미입력 시 0개
-                            "price": 0,  # 옵션가
-                            "sellerManagerCode": "string",  # 판매자 관리 코드
-                            "usable": True,  # 사용여부
-                        },
-                    ],
+                    "optionCombinations": [],
                     "standardOptionGroups": [],
                     "useStockManagement": True,  # 옵션 재고 수량 관리 사용 여부
                     "optionDeliveryAttributes": [],  # 옵션별 배송 속성 옵션값 목록

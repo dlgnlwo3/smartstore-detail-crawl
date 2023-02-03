@@ -17,7 +17,7 @@ from timeit import default_timer as timer
 from process.product_crawler_process import ProductCrawlerProcess
 
 
-# import debugpy
+import debugpy
 
 
 class ProductListSearchThread(QThread):
@@ -35,7 +35,7 @@ class ProductListSearchThread(QThread):
 
     def run(self):
         try:
-            # debugpy.debug_this_thread()
+            debugpy.debug_this_thread()
 
             self.log_msg.emit(f"검색 시작")
 
@@ -81,7 +81,7 @@ class ProductDetailSearchThread(QThread):
 
     def run(self):
         try:
-            # debugpy.debug_this_thread()
+            debugpy.debug_this_thread()
 
             self.log_msg.emit(f"검색 시작")
 
@@ -104,8 +104,6 @@ class ProductDetailSearchThread(QThread):
         except Exception as e:
             print(f"작업 중 오류가 발생했습니다. {str(e)}")
             self.log_msg.emit(f"작업 중 오류가 발생했습니다. {str(e)}")
-
-        self.log_msg.emit(f"{ProductCrawlerProcess.i} / {ProductCrawlerProcess.row['상품명']} 상품까지 저장되었습니다.")
 
         self.product_detail_search_finished.emit()
 

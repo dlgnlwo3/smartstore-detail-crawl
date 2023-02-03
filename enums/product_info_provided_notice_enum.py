@@ -7,8 +7,9 @@ if 1 == 1:
 from enum import Enum
 
 
-class productInfoProvidedNotice(Enum):
+class ProductInfoProvidedNotice(Enum):
 
+    # 의류
     WEAR = {
         "productInfoProvidedNoticeType": "WEAR",
         "wear": {
@@ -29,6 +30,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 구두, 신발
     SHOES = {
         "productInfoProvidedNoticeType": "SHOES",
         "shoes": {
@@ -48,6 +50,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 가방
     BAG = {
         "productInfoProvidedNoticeType": "BAG",
         "bag": {
@@ -67,6 +70,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 패션잡화(모자/벨트/액세서리)
     FASHION_ITEMS = {
         "productInfoProvidedNoticeType": "FASHION_ITEMS",
         "fashionItems": {
@@ -85,6 +89,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 침구류/커튼
     SLEEPING_GEAR = {
         "productInfoProvidedNoticeType": "SLEEPING_GEAR",
         "sleepingGear": {
@@ -104,6 +109,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 가구
     FURNITURE = {
         "productInfoProvidedNoticeType": "FURNITURE",
         "furniture": {
@@ -128,6 +134,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 영상가전(TV류)
     IMAGE_APPLIANCES = {
         "productInfoProvidedNoticeType": "IMAGE_APPLIANCES",
         "imageAppliances": {
@@ -153,6 +160,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 가정용 전기제품
     HOME_APPLIANCES = {
         "productInfoProvidedNoticeType": "HOME_APPLIANCES",
         "homeAppliances": {
@@ -177,6 +185,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 계절가전
     SEASON_APPLIANCES = {
         "productInfoProvidedNoticeType": "SEASON_APPLIANCES",
         "seasonAppliances": {
@@ -202,6 +211,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 사무용기기
     OFFICE_APPLIANCES = {
         "productInfoProvidedNoticeType": "OFFICE_APPLIANCES",
         "officeAppliances": {
@@ -227,6 +237,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 광학기기
     OPTICS_APPLIANCES = {
         "productInfoProvidedNoticeType": "OPTICS_APPLIANCES",
         "opticsAppliances": {
@@ -249,6 +260,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 소형전자
     MICROELECTRONICS = {
         "productInfoProvidedNoticeType": "MICROELECTRONICS",
         "microElectronics": {
@@ -273,6 +285,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 내비게이션
     NAVIGATION = {
         "productInfoProvidedNoticeType": "NAVIGATION",
         "navigation": {
@@ -299,6 +312,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 자동차용품
     CAR_ARTICLES = {
         "productInfoProvidedNoticeType": "CAR_ARTICLES",
         "carArticles": {
@@ -322,6 +336,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 의료기기
     MEDICAL_APPLIANCES = {
         "productInfoProvidedNoticeType": "MEDICAL_APPLIANCES",
         "medicalAppliances": {
@@ -347,6 +362,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 주방용품
     KITCHEN_UTENSILS = {
         "productInfoProvidedNoticeType": "KITCHEN_UTENSILS",
         "kitchenUtensils": {
@@ -370,6 +386,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 화장품
     COSMETIC = {
         "productInfoProvidedNoticeType": "COSMETIC",
         "cosmetic": {
@@ -395,6 +412,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 귀금속/보석/시계류
     JEWELLERY = {
         "productInfoProvidedNoticeType": "JEWELLERY",
         "jewellery": {
@@ -418,6 +436,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 식품
     FOOD = {
         "productInfoProvidedNoticeType": "FOOD",
         "food": {
@@ -445,6 +464,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 가공식품
     GENERAL_FOOD = {
         "productInfoProvidedNoticeType": "GENERAL_FOOD",
         "generalFood": {
@@ -474,6 +494,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 건강기능식품
     DIET_FOOD = {
         "productInfoProvidedNoticeType": "DIET_FOOD",
         "dietFood": {
@@ -504,6 +525,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 영유아용품
     KIDS = {
         "productInfoProvidedNoticeType": "KIDS",
         "kids": {
@@ -530,6 +552,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 악기 상품
     MUSICAL_INSTRUMENT = {
         "productInfoProvidedNoticeType": "MUSICAL_INSTRUMENT",
         "musicalInstrument": {
@@ -553,6 +576,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 스포츠용품
     SPORTS_EQUIPMENT = {
         "productInfoProvidedNoticeType": "SPORTS_EQUIPMENT",
         "sportsEquipment": {
@@ -578,6 +602,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 서적
     BOOKS = {
         "productInfoProvidedNoticeType": "BOOKS",
         "books": {
@@ -598,6 +623,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 물품대여 서비스
     RENTAL_ETC = {
         "productInfoProvidedNoticeType": "RENTAL_ETC",
         "rentalEtc": {
@@ -615,6 +641,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 디지털 콘텐츠(음원, 게임, 인터넷강의 등)
     DIGITAL_CONTENTS = {
         "productInfoProvidedNoticeType": "DIGITAL_CONTENTS",
         "digitalContents": {
@@ -633,6 +660,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 상품권/쿠폰
     GIFT_CARD = {
         "productInfoProvidedNoticeType": "GIFT_CARD",
         "giftCard": {
@@ -654,6 +682,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 모바일 쿠폰
     MOBILE_COUPON = {
         "productInfoProvidedNoticeType": "MOBILE_COUPON",
         "mobileCoupon": {
@@ -670,6 +699,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 영화/공연
     MOVIE_SHOW = {
         "productInfoProvidedNoticeType": "MOVIE_SHOW",
         "movieShow": {
@@ -689,6 +719,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 기타 용역
     ETC_SERVICE = {
         "productInfoProvidedNoticeType": "ETC_SERVICE",
         "etcService": {
@@ -706,6 +737,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 생활화학제품
     BIOCHEMISTRY = {
         "productInfoProvidedNoticeType": "BIOCHEMISTRY",
         "biochemistry": {
@@ -733,6 +765,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 살생물제품
     BIOCIDAL = {
         "productInfoProvidedNoticeType": "BIOCIDAL",
         "biocidal": {
@@ -759,6 +792,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 휴대폰
     CELLPHONE = {
         "productInfoProvidedNoticeType": "CELLPHONE",
         "cellPhone": {
@@ -786,6 +820,7 @@ class productInfoProvidedNotice(Enum):
         },
     }
 
+    # 기타
     ETC = {
         "productInfoProvidedNoticeType": "ETC",
         "etc": {

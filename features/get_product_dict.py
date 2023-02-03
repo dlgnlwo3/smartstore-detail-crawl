@@ -15,7 +15,7 @@ import time
 import re
 import clipboard
 import json
-from enums.product_info_provided_notice_enum import productInfoProvidedNotice
+from features.get_notice_from_category_code import CategoryCodeConverter
 
 
 class GetProductDict:
@@ -66,6 +66,66 @@ class GetProductDict:
         #     }
         # )
 
+        # 옵션
+        print(commonDto.have_option)
+        print(commonDto.optionGroupNames)
+        print(commonDto.optionNames)
+        print(commonDto.optionPrices)
+        print(commonDto.optionStockQuantity)
+
+        if commonDto.have_option:
+            # # ★ 옵션 정보 ★
+            # "optionInfo": {
+            #     # 단독형 옵션
+            #     "simpleOptionSortType": "CREATE",
+            #     "optionSimple": [],
+            #     "optionCustom": [],
+            #     # 조합형 옵션
+            #     "optionCombinationSortType": "CREATE",
+            #     # 조합형 옵션명 목록 optionGroupName1... optionGroupName2...
+            #     "optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"},
+            #     # 조합형 옵션
+            #     "optionCombinations": [
+            #         {
+            #             "id": 0,  # 옵션 ID
+            #             "optionName1": "string",  # 옵션값 1
+            #             "optionName2": "string",  # 옵션값 2
+            #             "optionName3": "string",  # 옵션값 3
+            #             # "optionName4": "string",  # 지점형 옵션에만 사용 -> 사용 안함
+            #             "stockQuantity": 0,  # 옵션별 재고 -> 미입력 시 0개
+            #             "price": 0,  # 옵션가
+            #             "sellerManagerCode": "string",  # 판매자 관리 코드
+            #             "usable": True,  # 사용여부
+            #         },
+            #     ],
+            #     "standardOptionGroups": [],
+            #     "useStockManagement": True,  # 옵션 재고 수량 관리 사용 여부
+            #     "optionDeliveryAttributes": [],  # 옵션별 배송 속성 옵션값 목록
+            # },
+
+            optionInfo.update(
+                {"optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"}}
+            )
+
+            optionInfo.update(
+                {
+                    "optionCombinations": [
+                        {
+                            "id": 0,
+                            "optionName1": "string",
+                            "optionName2": "string",
+                            "optionName3": "string",
+                            "stockQuantity": 0,
+                            "price": 0,
+                            "sellerManagerCode": "",
+                            "usable": True,
+                        },
+                    ],
+                }
+            )
+
+        print()
+
         # 재고수량
         originProduct.update({"stockQuantity": int(commonDto.stockQuantity)})
 
@@ -85,10 +145,12 @@ class GetProductDict:
         detailAttribute.update({"minorPurchasable": bool(commonDto.minorPurchasable)})
 
         # 상품상세정보제공고시
-        if commonDto.leafCategoryId == "":
-            print("상품상세정보제공고시 관련해서 카테고리를 조회해야함")
+        if commonDto.leafCategoryId:
+            print("카테고리코드 -> 상품상세정보제공고시")
+            notice = CategoryCodeConverter(commonDto.leafCategoryId).get_notice()
 
-        productInfoProvidedNotice = productInfoProvidedNotice
+        # productInfoProvidedNotice.update(ProductInfoProvidedNotice.ETC.value)
+        productInfoProvidedNotice.update(notice)
 
         # 택배사 코드
         deliveryCompany = commonDto.deliveryCompany

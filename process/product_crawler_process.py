@@ -196,7 +196,7 @@ class ProductCrawlerProcess:
             product_main_img = (
                 driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]').get_attribute("src").rsplit("?")[0]
             )
-            product_main_img = self.encode_url(product_main_img)
+            # product_main_img = self.encode_url(product_main_img)
             if product_main_img.find("shop-phinf.pstatic.net") <= -1:
                 raise Exception(f"{product_main_img} 메인이미지 획득 실패")
             img_format = product_main_img[product_main_img.rfind(".") :]
@@ -221,7 +221,7 @@ class ProductCrawlerProcess:
             )
             for i, optional_img in enumerate(optional_imgs):
                 optional_img = optional_img.get_attribute("src").rsplit("?")[0]
-                optional_img = self.encode_url(optional_img)
+                # optional_img = self.encode_url(optional_img)
                 if optional_img.find("shop-phinf.pstatic.net") <= -1:
                     print(f"{optional_img} 추가이미지 획득 실패")
                     continue
@@ -416,7 +416,7 @@ class ProductCrawlerProcess:
                 actions = ActionChains(driver).move_to_element(detail_img)
                 actions.perform()
                 detail_img = detail_img.get_attribute("src").rsplit("?")[0]
-                detail_img = self.encode_url(detail_img)
+                # detail_img = self.encode_url(detail_img)
                 if detail_img.find("shop-phinf.pstatic.net") <= -1:
                     print(f"{detail_img} 상세이미지 획득 실패")
                     continue

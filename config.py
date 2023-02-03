@@ -22,3 +22,5 @@ if not os.path.isdir(OUTPUT_FOLDER_NAME):
 TODAY_OUTPUT_FOLDER = os.path.join(os.getcwd(), OUTPUT_FOLDER_NAME, datetime.today().strftime("%Y%m%d"))
 if not os.path.isdir(TODAY_OUTPUT_FOLDER):
     os.mkdir(TODAY_OUTPUT_FOLDER)
+
+SMARTSTORE_CATEGORY_FILE = "D:\Consolework\smartstore-detail-crawl\smartstore\스마트스토어_카테고리코드.xls"

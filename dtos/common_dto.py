@@ -218,6 +218,8 @@ class CommonDto:
 
     @optionGroupNames.setter
     def optionGroupNames(self, value):  # setter
+        if value == "False":
+            value = ""
         self.__optionGroupNames = value
 
     @property
