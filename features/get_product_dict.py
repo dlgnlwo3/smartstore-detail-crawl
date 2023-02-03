@@ -67,13 +67,15 @@ class GetProductDict:
         # )
 
         # 옵션
-        print(commonDto.have_option)
-        print(commonDto.optionGroupNames)
-        print(commonDto.optionNames)
-        print(commonDto.optionPrices)
-        print(commonDto.optionStockQuantity)
+        print(f"have_option: {commonDto.have_option}")
+        print(f"optionGroupNames: {commonDto.optionGroupNames}")
+        print(f"optionNames: {commonDto.optionNames}")
+        print(f"optionPrices: {commonDto.optionPrices}")
+        print(f"optionStockQuantity: {commonDto.optionStockQuantity}")
 
         if commonDto.have_option:
+            optionCombinationGroupNames = self.convert_option_group(commonDto)
+            optionCombinations = self.convert_option_combinations(commonDto)
             # # ★ 옵션 정보 ★
             # "optionInfo": {
             #     # 단독형 옵션
@@ -103,26 +105,9 @@ class GetProductDict:
             #     "optionDeliveryAttributes": [],  # 옵션별 배송 속성 옵션값 목록
             # },
 
-            optionInfo.update(
-                {"optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"}}
-            )
+            optionInfo.update(optionCombinationGroupNames)
 
-            optionInfo.update(
-                {
-                    "optionCombinations": [
-                        {
-                            "id": 0,
-                            "optionName1": "string",
-                            "optionName2": "string",
-                            "optionName3": "string",
-                            "stockQuantity": 0,
-                            "price": 0,
-                            "sellerManagerCode": "",
-                            "usable": True,
-                        },
-                    ],
-                }
-            )
+            optionInfo.update({"optionCombinations": optionCombinations})
 
         print()
 
@@ -217,3 +202,48 @@ class GetProductDict:
                 tags_to_dict.append({"text": tag})
             print(tags_to_dict)
         return tags_to_dict
+
+    # 옵션그룹
+    def convert_option_group(self, commonDto: CommonDto):
+        print(f"optionGroupNames: {commonDto.optionGroupNames}")
+        optionGroupNames = commonDto.optionGroupNames.split(";")
+
+        optionCombinationGroupNames = {"optionCombinationGroupNames": {}}
+        option_groups_dict = {}
+        for i, option_group_name in enumerate(optionGroupNames):
+            option_groups_dict.update({f"optionGroupName{i+1}": option_group_name})
+        print(option_groups_dict)
+        optionCombinationGroupNames.update({"optionCombinationGroupNames": option_groups_dict})
+        print(optionCombinationGroupNames)
+        return optionCombinationGroupNames
+
+    # 옵션정보
+    def convert_option_combinations(self, commonDto: CommonDto):
+
+        print(f"optionNames: {commonDto.optionNames}")
+        print(f"optionPrices: {commonDto.optionPrices}")
+        print(f"optionStockQuantity: {commonDto.optionStockQuantity}")
+
+        optionCombinations = []
+        optionNames = commonDto.optionNames.split(";")
+        optionPrices = commonDto.optionPrices.split(";")
+        optionStockQuantity = 1
+
+        for i, option_name in enumerate(optionNames):
+            print(f"{i} {option_name} {optionPrices[i]} {optionStockQuantity}")
+
+            option_combination = {}
+
+            option_name = option_name.split(",")
+            for j, option in enumerate(option_name):
+                option_combination.update({f"optionName{j+1}": option})
+            option_combination.update({"stockQuantity": optionStockQuantity})
+            option_combination.update({"price": optionPrices[i]})
+            option_combination.update({"usable": True})
+            print(option_combination)
+
+            optionCombinations.append(option_combination)
+
+        print(optionCombinations)
+
+        return optionCombinations

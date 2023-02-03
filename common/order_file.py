@@ -25,7 +25,7 @@ class OrderFile:
             "추가이미지": str,
             "상세이미지": str,
             "옵션": str,
-            "옵션그룹": bool,
+            "옵션그룹": str,
             "옵션이름": str,
             "옵션가격": str,
         }

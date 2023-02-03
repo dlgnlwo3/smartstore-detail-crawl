@@ -116,8 +116,8 @@ class ProductDetailDto:
         list_to_str = ""
         if len(value) > 0:
             list_to_str = ";".join(value)
-        if len(list_to_str) > 0:
-            list_to_str += ";"
+        # if len(list_to_str) > 0:
+        #     list_to_str += ";"
 
         self.__option_group_names = list_to_str
 
@@ -131,8 +131,8 @@ class ProductDetailDto:
         list_to_str = ""
         if len(value) > 0:
             list_to_str = ";".join(value)
-        if len(list_to_str) > 0:
-            list_to_str += ";"
+        # if len(list_to_str) > 0:
+        #     list_to_str += ";"
 
         self.__option_names = list_to_str
 
@@ -146,8 +146,8 @@ class ProductDetailDto:
         list_to_str = ""
         if len(value) > 0:
             list_to_str = ";".join(value)
-        if len(list_to_str) > 0:
-            list_to_str += ";"
+        # if len(list_to_str) > 0:
+        #     list_to_str += ";"
 
         self.__option_prices = list_to_str
 
