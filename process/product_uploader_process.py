@@ -18,6 +18,7 @@ from api.image_upload import CommerceImageUploader
 from features.get_dto_from_row import GetDtos
 from features.get_product_dict import GetProductDict
 import time
+import asyncio
 
 
 class ProductUploaderProcess:
@@ -30,7 +31,7 @@ class ProductUploaderProcess:
         self.client_secret = self.guiDto.client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
-
+        
     def work_start(self):
         print(f"work_start")
 
@@ -83,8 +84,8 @@ class ProductUploaderProcess:
 
     # 이미지 업로드
     def convert_img_url(self, commonDto: CommonDto):
-        commonDto.representativeImageUrl = self.imageUploader.multi_image_upload([commonDto.representativeImage])
-        commonDto.optionalImagesUrls = self.imageUploader.multi_image_upload(commonDto.optionalImages)
-        commonDto.detailImagesUrls = self.imageUploader.multi_image_upload(commonDto.detailImages)
+        commonDto.representativeImageUrl = asyncio.run(self.imageUploader.multi_image_upload([commonDto.representativeImage]))
+        commonDto.optionalImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.optionalImages))
+        commonDto.detailImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.detailImages))
 
         return commonDto

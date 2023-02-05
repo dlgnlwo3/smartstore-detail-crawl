@@ -20,6 +20,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 import urllib.request
 import re
 from common.image_util import remove_bg
+from api.category import CommerceCategory
 
 
 class ProductCrawlerProcess:
@@ -29,19 +30,24 @@ class ProductCrawlerProcess:
         self.driver.implicitly_wait(self.default_wait)
         self.current_count = 0
         self.worked_url_list = []
+        self.setAllCategories()
 
     def setGuiDto(self, guiDto: GUIDto):
         self.guiDto = guiDto
+
+    def setAllCategories(self):
+        self.cmBot = CommerceCategory("3PGRSqZEvqy6NtPG3Loc32", "$2a$04$gOILS2yCAY7EMH52LvbyFu")
+        self.all_categories: dict = self.cmBot.get_all_category()
 
     def setLogger(self, log_msg):
         self.log_msg = log_msg
 
     def save_img_from_url(self, url: str, file_name: str, product_name: str):
-
         store_name = "store_name"
         try:
             store_name = self.guiDto.product_list_excel_file[
-                self.guiDto.product_list_excel_file.rfind("/") + 1 : self.guiDto.product_list_excel_file.rfind("_상품목록")
+                self.guiDto.product_list_excel_file.rfind("/")
+                + 1 : self.guiDto.product_list_excel_file.rfind("_상품목록")
             ]
         except Exception as e:
             pass
@@ -60,15 +66,20 @@ class ProductCrawlerProcess:
         temp_file_path = os.path.join(product_path, temp_file_name)
         try:
             urllib.request.urlretrieve(url, temp_file_path)
-            time.sleep(0.5)
             file_name = file_name.replace(".jpg", ".png").replace(".jpeg", ".png")
             file_path = os.path.join(product_path, file_name)
+
+            global_log_append("누끼이미지 생성시작")
+            global_log_append(temp_file_path)
             remove_bg(temp_file_path, file_path)
+            global_log_append(file_path)
+            global_log_append("누끼이미지 생성종료")
 
             time.sleep(0.5)
 
         except Exception as e:
             print(f"{url} 이미지 생성 실패")
+            global_log_append(f"{url} 이미지 생성 실패")
 
         finally:
             if os.path.isfile(temp_file_path):
@@ -101,7 +112,9 @@ class ProductCrawlerProcess:
         # 페이지를 넘기며 모든 물품의 url 수집
         current_page = 1
         while True:
-            driver.get(f"{self.guiDto.store_url}/category/ALL?st=TOTALSALE&dt=LIST&page={current_page}&size=80")
+            driver.get(
+                f"{self.guiDto.store_url}/category/ALL?st=TOTALSALE&dt=LIST&page={current_page}&size=80"
+            )
             # 로딩대기
             WebDriverWait(driver, self.default_wait).until(
                 EC.element_to_be_clickable((By.XPATH, '//a[contains(@class, "a:lst.product")]'))
@@ -119,9 +132,9 @@ class ProductCrawlerProcess:
             # 상품 url 저장
             for product_link in product_links:
                 product_url_dto = ProductURLDto()
-                product_url_dto.product_name = product_link.find_element(By.CSS_SELECTOR, "strong").get_attribute(
-                    "textContent"
-                )
+                product_url_dto.product_name = product_link.find_element(
+                    By.CSS_SELECTOR, "strong"
+                ).get_attribute("textContent")
                 product_url_dto.product_url = product_link.get_attribute("href")
                 print(f"{product_url_dto.product_name} {product_url_dto.product_url}")
 
@@ -163,9 +176,19 @@ class ProductCrawlerProcess:
 
         # 카테고리
         try:
-            categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
+            categories = driver.find_elements(
+                By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]'
+            )
             category = categories[-1].get_attribute("href").split("/")[-1]
+
+            # 자체 상점의 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
+            if len(category) > 10:
+                category = self.cmBot.get_category_id_by_product_name(
+                    product_name, self.all_categories
+                )
+
             print(category)
+
             product_detail_dto.product_category = category
         except Exception as e:
             print("카테고리 오류")
@@ -174,7 +197,8 @@ class ProductCrawlerProcess:
         try:
             price = (
                 driver.find_element(
-                    By.XPATH, '//strong[./span[contains(text(), "상품 가격")] and ./span[contains(text(), "원")]]//span[2]'
+                    By.XPATH,
+                    '//strong[./span[contains(text(), "상품 가격")] and ./span[contains(text(), "원")]]//span[2]',
                 )
                 .get_attribute("textContent")
                 .replace(",", "")
@@ -209,9 +233,19 @@ class ProductCrawlerProcess:
         # 메인이미지
         try:
             file_name = ""
-            product_main_img = (
-                driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]').get_attribute("src").rsplit("?")[0]
-            )
+            try:
+                driver.implicitly_wait(1)
+                product_main_img = (
+                    driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]')
+                    .get_attribute("src")
+                    .rsplit("?")[0]
+                )
+            except:
+                product_main_img = (
+                    driver.find_element(By.XPATH, '//img[contains(@alt, "대표이미지")]')
+                    .get_attribute("src")
+                    .rsplit("?")[0]
+                )
             # product_main_img = self.encode_url(product_main_img)
             if product_main_img.find("shop-phinf.pstatic.net") <= -1:
                 raise Exception(f"{product_main_img} 메인이미지 획득 실패")
@@ -219,7 +253,9 @@ class ProductCrawlerProcess:
 
             file_name = f"{product_detail_dto.product_name}_메인이미지{img_format}"
             file_name = self.save_img_from_url(
-                url=product_main_img, file_name=file_name, product_name=product_detail_dto.product_name
+                url=product_main_img,
+                file_name=file_name,
+                product_name=product_detail_dto.product_name,
             )
             print(f"main_img: {file_name}")
             product_detail_dto.product_main_img = file_name
@@ -245,7 +281,9 @@ class ProductCrawlerProcess:
                 img_format = optional_img[optional_img.rfind(".") :]
                 file_name = f"{product_detail_dto.product_name}_추가이미지_{i}{img_format}"
                 file_name = self.save_img_from_url(
-                    url=optional_img, file_name=file_name, product_name=product_detail_dto.product_name
+                    url=optional_img,
+                    file_name=file_name,
+                    product_name=product_detail_dto.product_name,
                 )
                 product_optional_imgs.append(file_name)
             print(f"optional_imgs: {product_optional_imgs}")
@@ -270,7 +308,9 @@ class ProductCrawlerProcess:
             print(f"옵션이 있습니다.")
 
             # 옵션의 개수를 파악합니다. -> 숨겨져있는 element가 하나씩 더 검색됨...
-            option_selectors = driver.find_elements(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
+            option_selectors = driver.find_elements(
+                By.XPATH, '//a[contains(@class, "a:pcs.opopen")]'
+            )
             option_len = int(len(option_selectors) / 2)
             print(option_len)
 
@@ -292,7 +332,6 @@ class ProductCrawlerProcess:
                     # $x('//ul[@role="listbox"]//li')
                     option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
                     for option_li in option_li_els:
-
                         # 옵션이름
                         option_name = option_li.get_attribute("textContent")
 
@@ -337,7 +376,8 @@ class ProductCrawlerProcess:
 
                 # 첫번째 옵션 그룹 열기
                 driver.find_element(
-                    By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                    By.XPATH,
+                    f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]',
                 ).click()
 
                 # $x('//ul[@role="listbox"]//li')
@@ -350,7 +390,8 @@ class ProductCrawlerProcess:
 
                 # 첫번째 옵션 그룹 닫기
                 driver.find_element(
-                    By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                    By.XPATH,
+                    f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]',
                 ).click()
 
                 print(first_option_names)
@@ -359,21 +400,26 @@ class ProductCrawlerProcess:
                 for first_option_name in first_option_names:
                     # 첫번째 옵션 그룹 열기
                     driver.find_element(
-                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]'
+                        By.XPATH,
+                        f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[0]}")]',
                     ).click()
 
                     # 첫번째 옵션 이름 클릭 (블랙)
                     driver.find_element(
-                        By.XPATH, f'//a[contains(@class, "N=a:pcs.opone")][contains(text(), "{first_option_name}")]'
+                        By.XPATH,
+                        f'//a[contains(@class, "N=a:pcs.opone")][contains(text(), "{first_option_name}")]',
                     ).click()
 
                     # 두번째 옵션 그룹 열기
                     driver.find_element(
-                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]'
+                        By.XPATH,
+                        f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]',
                     ).click()
 
                     # 두번째 옵션 이름 추출
-                    second_option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
+                    second_option_li_els = driver.find_elements(
+                        By.XPATH, '//ul[@role="listbox"]//li'
+                    )
 
                     for second_option_li in second_option_li_els:
                         second_option_name = second_option_li.get_attribute("textContent")
@@ -398,7 +444,8 @@ class ProductCrawlerProcess:
 
                     # 두번째 옵션 그룹 닫기
                     driver.find_element(
-                        By.XPATH, f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]'
+                        By.XPATH,
+                        f'//a[contains(@class, "a:pcs.opopen")][contains(text(), "{option_group_names[1]}")]',
                     ).click()
 
                     print(option_prices)
@@ -454,7 +501,6 @@ class ProductCrawlerProcess:
 
     # 상품URL이 들어있는 엑셀파일을 이용해서 상품 상세정보를 가져옵니다.
     def get_all_product_details(self, excel_file):
-
         product_url_file = ProductURLFile(excel_file)
         df_product_url = product_url_file.df_product_url
         print(df_product_url)
@@ -462,13 +508,14 @@ class ProductCrawlerProcess:
         productDetailDtos = []
 
         for self.i, self.row in df_product_url.iterrows():
-
             try:
                 product_name = str(self.row["상품명"])
                 product_url = str(self.row["상품URL"])
 
                 print(f"{self.i} {product_name} {product_url}")
-                product_detail_dto: ProductDetailDto = self.get_product_detail_dto(product_name, product_url)
+                product_detail_dto: ProductDetailDto = self.get_product_detail_dto(
+                    product_name, product_url
+                )
 
                 print(f"{product_detail_dto.product_name}")
                 productDetailDtos.append(product_detail_dto.get_dict())
@@ -494,7 +541,6 @@ class ProductCrawlerProcess:
 
     # 작업 시작
     def work_start(self):
-
         print(self.guiDto.product_list_excel_file)
 
         if os.path.isfile(self.guiDto.product_list_excel_file):
@@ -512,7 +558,6 @@ class ProductCrawlerProcess:
 
 
 if __name__ == "__main__":
-
     # 기준입력 - 특정해시태그 포함된 게시물
     # 해당 계정 팔로우 수가 일정 수 이상인 계정리스트
 

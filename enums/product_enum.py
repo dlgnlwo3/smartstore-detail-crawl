@@ -9,6 +9,8 @@ from enum import Enum
 
 class productEnum(Enum):
 
+    DEFAULT_LEAFCATEGORYID = "50002429"
+
     PRODUCT = {
         "originProduct": {
             "statusType": "SALE",  # 상품 판매 상태 코드 -> 상품 등록 시에는 SALE만 입력 가능

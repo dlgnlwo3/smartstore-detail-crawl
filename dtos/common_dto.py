@@ -8,7 +8,6 @@ if 1 == 1:
 # 공통값 DTO
 class CommonDto:
     def __init__(self):
-
         self.__media_path = ""  # 이미지 경로
         self.__leafCategoryId = ""  # 카테고리
         self.__name = ""  # 상품명
@@ -93,7 +92,6 @@ class CommonDto:
 
     @representativeImage.setter
     def representativeImage(self, value):  # setter
-
         if value != "":
             value = os.path.join(self.media_path, self.name, value)
 
@@ -109,7 +107,10 @@ class CommonDto:
         if value != "":
             option_imgs = value.split(",")
             for option_img in option_imgs:
-                option_img_list.append(os.path.join(self.media_path, self.name, option_img))
+                img_path = os.path.join(self.media_path, self.name, option_img)
+                # 파일이 존재하는 경우에만 입력추가
+                if os.path.isfile(img_path):
+                    option_img_list.append(img_path)
         self.__optionalImages = option_img_list
 
     @property
@@ -122,7 +123,9 @@ class CommonDto:
         if value != "":
             detail_imgs = value.split(",")
             for detail_img in detail_imgs:
-                detail_img_list.append(os.path.join(self.media_path, self.name, detail_img))
+                img_path = os.path.join(self.media_path, detail_img)
+                if os.path.isfile(img_path):
+                    detail_img_list.append(img_path)
         self.__detailImages = detail_img_list
 
     @property
@@ -139,7 +142,6 @@ class CommonDto:
 
     @optionalImagesUrls.setter
     def optionalImagesUrls(self, value):  # setter
-
         option_img_url_list = []
         if value != []:
             for option_img_url in value:

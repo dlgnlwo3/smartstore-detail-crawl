@@ -13,9 +13,9 @@ from process.product_uploader_process import ProductUploaderProcess
 
 # import debugpy
 
+
 # store
 class ProductUploaderThread(QThread):
-
     log_msg = pyqtSignal(str)
     store_finished = pyqtSignal()
 
@@ -28,7 +28,6 @@ class ProductUploaderThread(QThread):
         self.guiDto = guiDto
 
     def run(self):
-
         # debugpy.debug_this_thread()
 
         self.log_msg.emit(f"작업 시작")

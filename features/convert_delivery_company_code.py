@@ -171,4 +171,7 @@ class DeliveryCompanyConverter:
         elif delivery_company == "성훈물류":
             delivery_company = "SUNGHUN"
 
+        if not delivery_company:
+            delivery_company = "CJGLS"
+
         return delivery_company

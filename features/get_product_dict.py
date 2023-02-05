@@ -73,11 +73,13 @@ class GetProductDict:
         print(f"optionPrices: {commonDto.optionPrices}")
         print(f"optionStockQuantity: {commonDto.optionStockQuantity}")
 
-        if commonDto.have_option:
+        if commonDto.have_option and len(commonDto.optionGroupNames) > 0:
             optionCombinationGroupNames = self.convert_option_group(commonDto)
             optionCombinations = self.convert_option_combinations(commonDto)
             optionInfo.update(optionCombinationGroupNames)
             optionInfo.update({"optionCombinations": optionCombinations})
+        else:
+            detailAttribute["optionInfo"] = {}
 
         print()
 
@@ -146,7 +148,9 @@ class GetProductDict:
             )
 
         # 판매자설정코드
-        detailAttribute.update({"sellerCodeInfo": {"sellerManagementCode": commonDto.sellerManagementCode}})
+        detailAttribute.update(
+            {"sellerCodeInfo": {"sellerManagementCode": commonDto.sellerManagementCode}}
+        )
 
         # 검색설정
         # tags_to_dict = self.get_sellerTags(commonDto.sellerTags)
@@ -171,18 +175,20 @@ class GetProductDict:
 
         if body is None:
             print(f"html 태그가 아닙니다.")
-            detailContent = f"<br /> <p style='text-align: center;'> <img src='{commonDto.representativeImageUrl}' alt='' class='se-image-resource'> </p>{image_tag}"
+            # detailContent = f"<br /> <p style='text-align: center;'> <img src='{commonDto.representativeImageUrl}' alt='' class='se-image-resource'> </p>{image_tag}"
+            detailContent = f"<br /> <p style='text-align: center;'>{image_tag}</p>"
         else:
             print(f"html 태그 입니다.")
             detailContent = commonDto.detailContent
-            detailContent = detailContent.replace("<BR><BR><BR><BR>", f"<BR><BR><BR><BR> {image_tag} <BR><BR><BR><BR>")
+            detailContent = detailContent.replace(
+                "<BR><BR><BR><BR>", f"<BR><BR><BR><BR> {image_tag} <BR><BR><BR><BR>"
+            )
             print(detailContent)
 
         return detailContent
 
     # 검색설정 (해시태그)
     def get_sellerTags(self, sellerTags: str):
-
         tags_to_dict = []
         if sellerTags != "":
             sellerTags = sellerTags.split(",")
@@ -207,7 +213,6 @@ class GetProductDict:
 
     # 옵션정보
     def convert_option_combinations(self, commonDto: CommonDto):
-
         print(f"optionNames: {commonDto.optionNames}")
         print(f"optionPrices: {commonDto.optionPrices}")
         print(f"optionStockQuantity: {commonDto.optionStockQuantity}")
@@ -224,8 +229,21 @@ class GetProductDict:
 
             option_name = option_name.split(",")
             for j, option in enumerate(option_name):
+                # 품절이라는 단어 있을 시 못들어감
+                option = option.replace(" (품절)", "")
+                option = option.replace("(품절)", "")
+                option = option.replace("품절", "")
+                option = option[:25]
                 option_combination.update({f"optionName{j+1}": option})
             option_combination.update({"stockQuantity": optionStockQuantity})
+
+            if commonDto.salePrice:
+                half_price = int(commonDto.salePrice) / 2
+                half_price = int(half_price)
+
+                if abs(int(optionPrices[i])) > abs(half_price):
+                    optionPrices[i] = half_price
+
             option_combination.update({"price": optionPrices[i]})
             option_combination.update({"usable": True})
             print(option_combination)

@@ -29,14 +29,12 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v0.0.1" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v0.0.5" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
-
     # 초기화
     def __init__(self):
-
         print(f"PROGRAM_PATH: {PROGRAM_PATH}")
         print(f"EXE_PATH: {EXE_PATH}")
         print(f"SMARTSTORE_CATEGORY_FILE: {SMARTSTORE_CATEGORY_FILE}")
@@ -80,7 +78,6 @@ class MainUI(QWidget):
 
     # 메인 UI
     def initUI(self):
-
         # 이미지 주소를 복사해야 함
         ICON_IMAGE_URL = "https://i.imgur.com/MyAplh0.png"
         self.icon = QNetworkAccessManager()
@@ -97,7 +94,7 @@ class MainUI(QWidget):
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle("스마트스토어 v0.0.1")
+        self.setWindowTitle("스마트스토어 v0.0.5")
         self.resize(800, 800)
         self.center()
         self.show()

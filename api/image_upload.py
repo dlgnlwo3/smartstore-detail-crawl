@@ -73,7 +73,7 @@ class CommerceImageUploader:
     def get_headers_multipart(self):
         return {"Authorization": f"Bearer {self.token}"}
 
-    def multi_image_upload(self, img_list: list):
+    async def multi_image_upload(self, img_list: list):
         print("multi_image_upload")
 
         uploaded_images = []
