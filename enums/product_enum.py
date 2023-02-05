@@ -8,7 +8,6 @@ from enum import Enum
 
 
 class productEnum(Enum):
-
     DEFAULT_LEAFCATEGORYID = "50002429"
 
     PRODUCT = {
@@ -37,7 +36,11 @@ class productEnum(Enum):
                     "freeConditionalAmount": 0,  # 무료 조건 금액
                     "deliveryFeePayType": "PREPAID",  # 배송비 결제 방식 -> COLLECT(착불), PREPAID(선결제), COLLECT_OR_PREPAID(착불 또는 선결제)
                     # 지역별 추가 배송비 -> AREA_2(내륙/제주 및 도서산간 지역으로 구분(2권역)), AREA_3(내륙/제주/제주 외 도서산간 지역으로 구분(3권역))
-                    "deliveryFeeByArea": {"deliveryAreaType": "AREA_3", "area2extraFee": 20000, "area3extraFee": 30000},
+                    "deliveryFeeByArea": {
+                        "deliveryAreaType": "AREA_3",
+                        "area2extraFee": 20000,
+                        "area3extraFee": 30000,
+                    },
                     # "differentialFeeByArea": "string",
                 },
                 "claimDeliveryInfo": {
@@ -138,7 +141,11 @@ class productEnum(Enum):
                     # "thirdExtraFee": 0,
                     "deliveryFeePayType": "PREPAID",  # 배송비 결제 방식 -> COLLECT(착불), PREPAID(선결제), COLLECT_OR_PREPAID(착불 또는 선결제)
                     # 지역별 추가 배송비 -> AREA_2(내륙/제주 및 도서산간 지역으로 구분(2권역)), AREA_3(내륙/제주/제주 외 도서산간 지역으로 구분(3권역))
-                    "deliveryFeeByArea": {"deliveryAreaType": "AREA_3", "area2extraFee": 20000, "area3extraFee": 30000},
+                    "deliveryFeeByArea": {
+                        "deliveryAreaType": "AREA_3",
+                        "area2extraFee": 4000,
+                        "area3extraFee": 5000,
+                    },
                     # "differentialFeeByArea": "string",
                 },
                 "claimDeliveryInfo": {
@@ -196,7 +203,10 @@ class productEnum(Enum):
                     # 조합형 옵션
                     "optionCombinationSortType": "CREATE",
                     # 조합형 옵션명 목록 optionGroupName1... optionGroupName2...
-                    "optionCombinationGroupNames": {"optionGroupName1": "string", "optionGroupName2": "string"},
+                    "optionCombinationGroupNames": {
+                        "optionGroupName1": "string",
+                        "optionGroupName2": "string",
+                    },
                     # 조합형 옵션
                     "optionCombinations": [
                         {

@@ -116,7 +116,7 @@ class GetProductDict:
         deliveryInfo.update({"deliveryCompany": f"{deliveryCompany}"})
 
         # 배송비
-        # 도서/산간 옵션 "deliveryFeeByArea": {"deliveryAreaType": "AREA_3", "area2extraFee": 20000, "area3extraFee": 30000},
+        # 도서/산간 옵션 "deliveryFeeByArea": {"deliveryAreaType": "AREA_3", "area2extraFee": 4000, "area3extraFee": 5000},
         if commonDto.baseFee == "" or commonDto.baseFee == "0":
             deliveryInfo.update(
                 {
@@ -125,8 +125,8 @@ class GetProductDict:
                         "baseFee": 0,
                         "deliveryFeeByArea": {
                             "deliveryAreaType": "AREA_3",
-                            "area2extraFee": 20000,
-                            "area3extraFee": 30000,
+                            "area2extraFee": 4000,
+                            "area3extraFee": 5000,
                         },
                     },
                 }
@@ -140,8 +140,8 @@ class GetProductDict:
                         "deliveryFeePayType": "PREPAID",
                         "deliveryFeeByArea": {
                             "deliveryAreaType": "AREA_3",
-                            "area2extraFee": 20000,
-                            "area3extraFee": 30000,
+                            "area2extraFee": 4000,
+                            "area3extraFee": 5000,
                         },
                     }
                 }
