@@ -193,6 +193,14 @@ class ProductCrawlerProcess:
     # ProductDetailDto
     def get_product_detail_dto(self, product_name, product_url):
         product_detail_dto = ProductDetailDto()
+
+        # 고객의 개인 요구사항 -> 간혹 스토어마다 상품명의 가장 앞에 [1234234]와 같이 관리 코드를 넣어두는 경우가 있다고 함.
+        # 앞의 관리 코드를 제거해줄 것
+        regex_pattern = r"\[[\d]+]"
+        product_name = re.sub(regex_pattern, "", product_name)
+        product_name = product_name.strip()
+        print(product_name)
+
         product_detail_dto.product_name = product_name
         product_detail_dto.product_url = product_url
 
@@ -202,10 +210,14 @@ class ProductCrawlerProcess:
         driver.get(product_url)
 
         # 로딩대기
-        WebDriverWait(driver, self.default_wait).until(
-            EC.element_to_be_clickable((By.XPATH, '//a[./span[contains(text(), "구매하기")]]'))
-        )
-        time.sleep(1)
+        try:
+            WebDriverWait(driver, self.default_wait).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[./span[contains(text(), "구매하기")]]'))
+            )
+        except Exception as e:
+            pass
+        finally:
+            time.sleep(1)
 
         # 카테고리
         category = ""

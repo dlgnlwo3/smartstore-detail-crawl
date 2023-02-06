@@ -86,8 +86,10 @@ if __name__ == "__main__":
     start_time = timer()
     naverBot = NaverShopAPI()
     items = naverBot.fetch_sync_items(keyword)
-    df_items = pd.DataFrame.from_dict(items)
-    df_items.to_excel(f"하기스.xlsx")
+    print(type(items))
+    print(items)
+    # df_items = pd.DataFrame.from_dict(items)
+    # df_items.to_excel(f"하기스.xlsx")
 
     # # 한번에 10까지만 조회가능
     # keywords = ["여성 유니화", "편한힐", "면접구두", "승무원구두", "발편한구두", "여성 유니화", "편한힐", "면접구두", "편한힐", "면접구두"]
