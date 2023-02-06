@@ -4,6 +4,7 @@ class ProductDetailDto:
         self.__product_url = ""
         self.__product_category = ""
         self.__product_price = ""
+        self.__before_discount_price = ""
         self.__delivery_company = ""
         self.__delivery_fee = ""
         self.__product_main_img = ""
@@ -47,6 +48,14 @@ class ProductDetailDto:
     @product_price.setter
     def product_price(self, value: str):  # setter
         self.__product_price = value
+
+    @property
+    def before_discount_price(self):  # getter
+        return self.__before_discount_price
+
+    @before_discount_price.setter
+    def before_discount_price(self, value: str):  # setter
+        self.__before_discount_price = value
 
     @property
     def delivery_company(self):  # getter
@@ -160,6 +169,7 @@ class ProductDetailDto:
             "상품명": self.product_name,
             "상품URL": self.product_url,
             "카테고리": self.product_category,
+            "할인전가격": self.before_discount_price,
             "가격": self.product_price,
             "택배사": self.delivery_company,
             "배송비": self.delivery_fee,

@@ -241,6 +241,24 @@ class ProductCrawlerProcess:
         finally:
             product_detail_dto.product_price = price
 
+        # 할인 전 가격
+        # $x('//del[./span[contains(text(), "할인 전 가격")] and ./span[contains(text(), "원")]]//span[2]')
+        before_discount_price = ""
+        try:
+            driver.implicitly_wait(1)
+            before_discount_price = (
+                driver.find_element(
+                    By.XPATH, '//del[./span[contains(text(), "할인 전 가격")] and ./span[contains(text(), "원")]]//span[2]'
+                )
+                .get_attribute("textContent")
+                .replace(",", "")
+            )
+            print(before_discount_price)
+        except Exception as e:
+            print(f"할인 전 가격 오류")
+        finally:
+            product_detail_dto.before_discount_price = before_discount_price
+
         # 택배사
         delivery_company = ""
         try:
@@ -251,6 +269,7 @@ class ProductCrawlerProcess:
         except Exception as e:
             print("택배사 오류")
         finally:
+            driver.implicitly_wait(self.default_wait)
             product_detail_dto.delivery_company = delivery_company
 
         # 배송비
@@ -296,6 +315,7 @@ class ProductCrawlerProcess:
             print(e)
             print(f"메인이미지 오류")
         finally:
+            driver.implicitly_wait(self.default_wait)
             product_detail_dto.product_main_img = file_name
 
         # 추가이미지

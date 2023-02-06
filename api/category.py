@@ -84,8 +84,7 @@ class CommerceCategory:
         uploaded_images = res_json["images"]
         return uploaded_images
 
-
-    def get_category_id_by_product_name(self, product_name: str, all_categories:dict):
+    def get_category_id_by_product_name(self, product_name: str, all_categories: dict):
 
         category_id = ""
 
@@ -111,7 +110,6 @@ class CommerceCategory:
             first_competitor_category_name += f">{category3}"
         if category4:
             first_competitor_category_name += f">{category4}"
-
 
         for category in all_categories:
             if first_competitor_category_name == category["wholeCategoryName"]:
