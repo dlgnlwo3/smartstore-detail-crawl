@@ -31,6 +31,7 @@ class ProductUploaderProcess:
         self.client_secret = self.guiDto.client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
+        self.detail_img = self.guiDto.detail_img
 
     def work_start(self):
         print(f"work_start")
@@ -95,5 +96,16 @@ class ProductUploaderProcess:
         )
         commonDto.optionalImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.optionalImages))
         commonDto.detailImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.detailImages))
+
+        # GUI에서 상세이미지를 선택 한 경우 실행
+        if os.path.isfile(self.detail_img):
+            print(f"상세 이미지 업로드 함")
+            detail_img_url = asyncio.run(self.imageUploader.multi_image_upload([self.detail_img]))
+            commonDto.detailImagesUrls.insert(0, detail_img_url[0])
+            print(commonDto.detailImagesUrls)
+            print()
+
+        else:
+            print(f"상세 이미지 업로드 안함")
 
         return commonDto

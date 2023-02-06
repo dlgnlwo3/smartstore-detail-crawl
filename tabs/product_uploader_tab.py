@@ -24,6 +24,7 @@ class ProductUploaderUI(QWidget):
         self.save_client_id = ""
         self.save_client_secret = ""
         self.save_media_path_name = ""
+        self.save_detail_img_name = ""
 
         if os.path.isfile(self.save_file) == False:
             f = open(self.save_file, "w", encoding="UTF8")
@@ -33,6 +34,7 @@ class ProductUploaderUI(QWidget):
             self.save_client_id = f.readline().strip()
             self.save_client_secret = f.readline().strip()
             self.save_media_path_name = f.readline().strip()
+            self.save_detail_img_name = f.readline().strip()
         f.close()
 
         super().__init__()
@@ -53,6 +55,7 @@ class ProductUploaderUI(QWidget):
         client_id = self.client_id.text()
         client_secret = self.client_secret.text()
         media_path_name = self.media_path_name.text()
+        detail_img_name = self.detail_img_name.text()
 
         question_msg = "저장하시겠습니까?"
         reply = QMessageBox.question(self, "상태 저장", question_msg, QMessageBox.Yes, QMessageBox.No)
@@ -64,6 +67,7 @@ class ProductUploaderUI(QWidget):
                 f.write(f"{client_id}\n")
                 f.write(f"{client_secret}\n")
                 f.write(f"{media_path_name}\n")
+                f.write(f"{detail_img_name}\n")
                 f.close()
                 print(f"현재 상태를 저장했습니다.")
             except Exception as e:
@@ -95,11 +99,17 @@ class ProductUploaderUI(QWidget):
             QMessageBox.information(self, "작업 시작", f"사진 폴더를 선택해주세요.")
             return
 
+        if self.detail_img_name.text() == "":
+            print(f"상세 이미지를 선택해주세요.")
+            QMessageBox.information(self, "작업 시작", f"상세 이미지를 선택해주세요.")
+            return
+
         self.guiDto = GUIDto()
         self.guiDto.excel_file = self.excel_file_name.text()
         self.guiDto.client_id = self.client_id.text()
         self.guiDto.client_secret = self.client_secret.text()
         self.guiDto.media_path = self.media_path_name.text()
+        self.guiDto.detail_img = self.detail_img_name.text()
 
         self.store_thread = ProductUploaderThread()
         self.store_thread.log_msg.connect(self.log_append)
@@ -146,6 +156,19 @@ class ProductUploaderUI(QWidget):
         else:
             self.log_append(f"선택된 폴더가 없습니다.")
 
+    # 상세 이미지 선택
+    def detail_img_select_button_clicked(self):
+        print(f"clicked")
+        file_name = QFileDialog.getOpenFileName(self, "", "", "image file (*.jpg *.jpeg *.png)")
+
+        if file_name[0] == "":
+            print(f"선택된 파일이 없습니다.")
+            self.log_append(f"선택된 파일이 없습니다.")
+            return
+
+        print(file_name[0])
+        self.detail_img_name.setText(file_name[0])
+
     # 메인 UI
     def initUI(self):
 
@@ -191,6 +214,19 @@ class ProductUploaderUI(QWidget):
         option_inner_layout.addWidget(self.media_path_select_button)
         option_groupbox.setLayout(option_inner_layout)
 
+        # 상세 이미지 선택 그룹박스
+        detail_img_groupbox = QGroupBox("상세 이미지 선택")
+        self.detail_img_name = QLineEdit(f"{self.save_detail_img_name}")
+        self.detail_img_name.setDisabled(True)
+        self.detail_img_select_button = QPushButton("선택")
+
+        self.detail_img_select_button.clicked.connect(self.detail_img_select_button_clicked)
+
+        detail_img_inner_layout = QHBoxLayout()
+        detail_img_inner_layout.addWidget(self.detail_img_name, 8)
+        detail_img_inner_layout.addWidget(self.detail_img_select_button, 2)
+        detail_img_groupbox.setLayout(detail_img_inner_layout)
+
         # 작동 그룹박스
         start_stop_groupbox = QGroupBox(f"작업 시작")
         self.save_button = QPushButton("저장")
@@ -225,7 +261,8 @@ class ProductUploaderUI(QWidget):
         mid_layout.addWidget(option_groupbox, 5)
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addStretch(7)
+        bottom_layout.addStretch(2)
+        bottom_layout.addWidget(detail_img_groupbox, 5)
         bottom_layout.addWidget(start_stop_groupbox, 3)
 
         log_layout = QHBoxLayout()

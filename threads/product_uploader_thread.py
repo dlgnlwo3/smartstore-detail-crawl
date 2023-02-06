@@ -36,6 +36,7 @@ class ProductUploaderThread(QThread):
         self.client_secret = self.guiDto.client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
+        self.detail_img = self.guiDto.detail_img
 
         try:
             productUploaderProcess = ProductUploaderProcess(self.log_msg)

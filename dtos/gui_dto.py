@@ -16,6 +16,7 @@ class GUIDto:
         self.__client_secret = ""
         self.__excel_file = ""
         self.__media_path = ""
+        self.__detail_img = ""
 
     # product_crawler
     @property
@@ -66,3 +67,11 @@ class GUIDto:
     @media_path.setter
     def media_path(self, value):  # setter
         self.__media_path = value
+
+    @property
+    def detail_img(self):  # getter
+        return self.__detail_img
+
+    @detail_img.setter
+    def detail_img(self, value):  # setter
+        self.__detail_img = value
