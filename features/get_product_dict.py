@@ -23,6 +23,9 @@ class GetProductDict:
         self.product = productEnum.PRODUCT.value
         print()
 
+    def get_all_categories(self, all_categories):
+        self.all_categories = all_categories
+
     def get_product(self, commonDto: CommonDto):
         product = self.product
 
@@ -104,7 +107,7 @@ class GetProductDict:
         # 상품상세정보제공고시
         if commonDto.leafCategoryId:
             print("카테고리코드 -> 상품상세정보제공고시")
-            notice = CategoryCodeConverter(commonDto.leafCategoryId).get_notice()
+            notice = CategoryCodeConverter(commonDto.leafCategoryId, self.all_categories).get_notice()
 
         # productInfoProvidedNotice.update(ProductInfoProvidedNotice.ETC.value)
         productInfoProvidedNotice.update(notice)
@@ -148,9 +151,7 @@ class GetProductDict:
             )
 
         # 판매자설정코드
-        detailAttribute.update(
-            {"sellerCodeInfo": {"sellerManagementCode": commonDto.sellerManagementCode}}
-        )
+        detailAttribute.update({"sellerCodeInfo": {"sellerManagementCode": commonDto.sellerManagementCode}})
 
         # 검색설정
         # tags_to_dict = self.get_sellerTags(commonDto.sellerTags)
@@ -180,9 +181,7 @@ class GetProductDict:
         else:
             print(f"html 태그 입니다.")
             detailContent = commonDto.detailContent
-            detailContent = detailContent.replace(
-                "<BR><BR><BR><BR>", f"<BR><BR><BR><BR> {image_tag} <BR><BR><BR><BR>"
-            )
+            detailContent = detailContent.replace("<BR><BR><BR><BR>", f"<BR><BR><BR><BR> {image_tag} <BR><BR><BR><BR>")
             print(detailContent)
 
         return detailContent

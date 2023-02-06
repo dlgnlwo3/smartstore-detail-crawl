@@ -170,14 +170,16 @@ if __name__ == "__main__":
     # data = searchBot.get_product(product_test)
 
     # 모든 카테고리 조회
-    # data = searchBot.get_all_category()
+    data = searchBot.get_all_category()
 
     # 주소록 조회
     # data = searchBot.search_addr()
 
     # 묶음배송그룹 조회
-    data = searchBot.delivery_bundle_group()
+    # data = searchBot.delivery_bundle_group()
+
+    print(type(data))
 
     print(data)
 
-    clipboard.copy(str(data))
+    # clipboard.copy(str(data))

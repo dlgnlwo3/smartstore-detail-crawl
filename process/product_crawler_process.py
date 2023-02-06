@@ -119,9 +119,9 @@ class ProductCrawlerProcess:
 
         # 현재 상점의 전체상품 총 개수 파악
         # $x('//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong')
-        all_products = driver.find_element(
-            By.XPATH, '//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong'
-        ).get_attribute("textContent")
+        all_products = driver.find_element(By.XPATH, '//a[contains(@class, "N=a:ctt.cat")]//strong').get_attribute(
+            "textContent"
+        )
         all_products = all_products.replace(",", "")
         all_products = int(all_products)
         print(f"전체상품: {all_products}개")
@@ -208,21 +208,24 @@ class ProductCrawlerProcess:
         time.sleep(1)
 
         # 카테고리
+        category = ""
         try:
             categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
             category = categories[-1].get_attribute("href").split("/")[-1]
 
-            # 자체 상점의 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
+            # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
             if len(category) > 10:
                 category = self.cmBot.get_category_id_by_product_name(product_name, self.all_categories)
 
             print(category)
 
-            product_detail_dto.product_category = category
         except Exception as e:
             print("카테고리 오류")
+        finally:
+            product_detail_dto.product_category = category
 
         # 가격
+        price = ""
         try:
             price = (
                 driver.find_element(
@@ -233,31 +236,36 @@ class ProductCrawlerProcess:
                 .replace(",", "")
             )
             print(price)
-            product_detail_dto.product_price = price
         except Exception as e:
-            pass
+            print("가격 오류")
+        finally:
+            product_detail_dto.product_price = price
 
         # 택배사
+        delivery_company = ""
         try:
             delivery_company = driver.find_element(
                 By.XPATH, '//div[./span[contains(text(), "택배배송")]]//span[3]'
             ).get_attribute("textContent")
             print(delivery_company)
-            product_detail_dto.delivery_company = delivery_company
         except Exception as e:
-            pass
+            print("택배사 오류")
+        finally:
+            product_detail_dto.delivery_company = delivery_company
 
         # 배송비
+        delivery_fee = ""
         try:
             delivery_fee = driver.find_element(
                 By.XPATH, '//div[./span[contains(text(), "택배배송")]]//span[2]'
             ).get_attribute("textContent")
             delivery_fee = re.sub(r"[^0-9]", "", delivery_fee)
             print(delivery_fee)
-            product_detail_dto.delivery_fee = delivery_fee
             print()
         except Exception as e:
-            pass
+            print("배송비 오류")
+        finally:
+            product_detail_dto.delivery_fee = delivery_fee
 
         # 메인이미지
         try:
@@ -313,6 +321,7 @@ class ProductCrawlerProcess:
                 product_optional_imgs.append(file_name)
             print(f"optional_imgs: {product_optional_imgs}")
         except Exception as e:
+            print("추가이미지 오류")
             print(e)
         finally:
             driver.implicitly_wait(self.default_wait)
@@ -369,6 +378,7 @@ class ProductCrawlerProcess:
                             pass
                         print(option_price)
 
+                        option_name = option_name.replace(f" (품절)", "")
                         option_name = option_name.replace(f" (+{option_price}원)", "")
                         option_names.append(f"{option_name}")
                         print(option_name)
@@ -480,7 +490,7 @@ class ProductCrawlerProcess:
 
         except Exception as e:
             print(e)
-            print("option error")
+            print("옵션 오류")
         finally:
             driver.implicitly_wait(self.default_wait)
 
@@ -513,6 +523,7 @@ class ProductCrawlerProcess:
             #     product_detail_imgs.append(file_name)
             # print(f"detail_imgs: {product_detail_imgs}")
         except Exception as e:
+            print("상세이미지 오류")
             print(e)
         finally:
             driver.implicitly_wait(self.default_wait)

@@ -31,7 +31,7 @@ class ProductUploaderProcess:
         self.client_secret = self.guiDto.client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
-        
+
     def work_start(self):
         print(f"work_start")
 
@@ -43,9 +43,15 @@ class ProductUploaderProcess:
 
             self.addBot = CommerceAPI(client_id=self.client_id, client_secret=self.client_secret)
 
+            self.all_categories = self.addBot.get_all_category()
+
             get_dtos = GetDtos(df_order, self.media_path)
 
             get_dtos.get_common_dto_list()
+
+            get_product_dict = GetProductDict()
+
+            get_product_dict.get_all_categories(self.all_categories)
 
             commonDto: CommonDto
             for commonDto in get_dtos.common_dto_list:
@@ -55,7 +61,7 @@ class ProductUploaderProcess:
                     commonDto = self.convert_img_url(commonDto)
 
                     # 2. API 요청을 위해 commonDto의 정보로 API 요청 데이터를 만듭니다.
-                    product = GetProductDict().get_product(commonDto)
+                    product = get_product_dict.get_product(commonDto)
 
                     # 3. 상품을 올립니다.
                     result, fail_reason = self.addBot.add_product(product)
@@ -84,7 +90,9 @@ class ProductUploaderProcess:
 
     # 이미지 업로드
     def convert_img_url(self, commonDto: CommonDto):
-        commonDto.representativeImageUrl = asyncio.run(self.imageUploader.multi_image_upload([commonDto.representativeImage]))
+        commonDto.representativeImageUrl = asyncio.run(
+            self.imageUploader.multi_image_upload([commonDto.representativeImage])
+        )
         commonDto.optionalImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.optionalImages))
         commonDto.detailImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.detailImages))
 
