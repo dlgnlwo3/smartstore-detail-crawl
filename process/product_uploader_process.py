@@ -27,8 +27,8 @@ class ProductUploaderProcess:
 
     def setGuiDto(self, guiDto: GUIDto):
         self.guiDto = guiDto
-        self.client_id = self.guiDto.client_id
-        self.client_secret = self.guiDto.client_secret
+        self.commerceAPI_client_id = self.guiDto.commerceAPI_client_id
+        self.commerceAPI_client_secret = self.guiDto.commerceAPI_client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
         self.detail_img = self.guiDto.detail_img
@@ -40,9 +40,11 @@ class ProductUploaderProcess:
             order_file = OrderFile(self.guiDto.excel_file)
             df_order = order_file.df_order
 
-            self.imageUploader = CommerceImageUploader(self.client_id, self.client_secret)
+            self.imageUploader = CommerceImageUploader(self.commerceAPI_client_id, self.commerceAPI_client_secret)
 
-            self.addBot = CommerceAPI(client_id=self.client_id, client_secret=self.client_secret)
+            self.addBot = CommerceAPI(
+                client_id=self.commerceAPI_client_id, client_secret=self.commerceAPI_client_secret
+            )
 
             self.all_categories = self.addBot.get_all_category()
 

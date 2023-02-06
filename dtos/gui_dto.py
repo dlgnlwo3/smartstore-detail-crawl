@@ -7,16 +7,53 @@ if 1 == 1:
 
 class GUIDto:
     def __init__(self):
+        # API setting
+        self.__openAPI_client_id = ""
+        self.__openAPI_client_secret = ""
+        self.__commerceAPI_client_id = ""
+        self.__commerceAPI_client_secret = ""
+
         # product_crawler에 사용합니다.
         self.__store_url = ""
         self.__product_list_excel_file = ""
 
         # product_uploader에 사용합니다.
-        self.__client_id = ""
-        self.__client_secret = ""
         self.__excel_file = ""
         self.__media_path = ""
         self.__detail_img = ""
+
+    # API setting
+    @property
+    def openAPI_client_id(self):  # getter
+        return self.__openAPI_client_id
+
+    @openAPI_client_id.setter
+    def openAPI_client_id(self, value):  # setter
+        self.__openAPI_client_id = value
+
+    @property
+    def openAPI_client_secret(self):  # getter
+        return self.__openAPI_client_secret
+
+    @openAPI_client_secret.setter
+    def openAPI_client_secret(self, value):  # setter
+        self.__openAPI_client_secret = value
+
+    @property
+    def commerceAPI_client_id(self):  # getter
+        return self.__commerceAPI_client_id
+
+    @commerceAPI_client_id.setter
+    def commerceAPI_client_id(self, value):  # setter
+        self.__commerceAPI_client_id = value
+
+    @property
+    def commerceAPI_client_secret(self):  # getter
+        return self.__commerceAPI_client_secret
+
+    @commerceAPI_client_secret.setter
+    def commerceAPI_client_secret(self, value):  # setter
+        self.__commerceAPI_client_secret = value
 
     # product_crawler
     @property
@@ -36,21 +73,6 @@ class GUIDto:
         self.__product_list_excel_file = value
 
     # product_uploader
-    @property
-    def client_id(self):  # getter
-        return self.__client_id
-
-    @client_id.setter
-    def client_id(self, value):  # setter
-        self.__client_id = value
-
-    @property
-    def client_secret(self):  # getter
-        return self.__client_secret
-
-    @client_secret.setter
-    def client_secret(self, value):  # setter
-        self.__client_secret = value
 
     @property
     def excel_file(self):  # getter

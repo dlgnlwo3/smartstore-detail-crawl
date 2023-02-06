@@ -16,6 +16,7 @@ from dtos.gui_dto import *
 from common.utils import global_log_append
 from tabs.product_crawler_tab import ProductCrawlerUI
 from tabs.product_uploader_tab import ProductUploaderUI
+from tabs.API_setting_tab import APISettingUI
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
 from config import *
 
@@ -87,6 +88,7 @@ class MainUI(QWidget):
         tabs = QTabWidget()
         tabs.addTab(ProductCrawlerUI(), "상품수집")
         tabs.addTab(ProductUploaderUI(), "상품등록")
+        tabs.addTab(APISettingUI(), "API 설정")
 
         vbox = QVBoxLayout()
         vbox.addWidget(tabs)

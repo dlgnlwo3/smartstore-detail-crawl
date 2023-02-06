@@ -32,8 +32,8 @@ class ProductUploaderThread(QThread):
 
         self.log_msg.emit(f"작업 시작")
 
-        self.client_id = self.guiDto.client_id
-        self.client_secret = self.guiDto.client_secret
+        self.commerceAPI_client_id = self.guiDto.commerceAPI_client_id
+        self.commerceAPI_client_secret = self.guiDto.commerceAPI_client_secret
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
         self.detail_img = self.guiDto.detail_img

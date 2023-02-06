@@ -106,8 +106,8 @@ class ProductUploaderUI(QWidget):
 
         self.guiDto = GUIDto()
         self.guiDto.excel_file = self.excel_file_name.text()
-        self.guiDto.client_id = self.client_id.text()
-        self.guiDto.client_secret = self.client_secret.text()
+        self.guiDto.commerceAPI_client_id = self.client_id.text()
+        self.guiDto.commerceAPI_client_secret = self.client_secret.text()
         self.guiDto.media_path = self.media_path_name.text()
         self.guiDto.detail_img = self.detail_img_name.text()
 
