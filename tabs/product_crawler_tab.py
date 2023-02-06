@@ -130,7 +130,7 @@ class ProductCrawlerUI(QWidget):
         # 상품목록 그룹박스
         product_list_groupbox = QGroupBox("상품목록 크롤링")
         self.store_url_label = QLabel(f"상점주소")
-        # self.store_url = QLineEdit("https://smartstore.naver.com/dokkaebistore")
+        # self.store_url = QLineEdit("https://brand.naver.com/lotteconf")
         self.store_url = QLineEdit("")
         self.product_list_search_start_button = QPushButton("검색시작")
         self.product_list_search_stop_button = QPushButton("중지")

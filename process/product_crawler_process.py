@@ -46,8 +46,7 @@ class ProductCrawlerProcess:
         store_name = "store_name"
         try:
             store_name = self.guiDto.product_list_excel_file[
-                self.guiDto.product_list_excel_file.rfind("/")
-                + 1 : self.guiDto.product_list_excel_file.rfind("_상품목록")
+                self.guiDto.product_list_excel_file.rfind("/") + 1 : self.guiDto.product_list_excel_file.rfind("_상품목록")
             ]
         except Exception as e:
             pass
@@ -109,12 +108,32 @@ class ProductCrawlerProcess:
         # 해당 스토어에 접속, 물품 80개씩 보기, 리스트 형식 정렬 및 누적판매순 정렬
         # ex) https://smartstore.naver.com/dokkaebistore/category/ALL?st=TOTALSALE&dt=LIST&page=1&size=80
 
-        # 페이지를 넘기며 모든 물품의 url 수집
+        # 접속한 스토어가 브랜드 전용 스토어라면 (brand.naver.com)
+        # url -> page 숫자를 수정해도 1페이지로 강제로 이동됨
+
         current_page = 1
+        product_size = 80
+
+        # 상품 목록 페이지 접속
+        driver.get(f"{self.guiDto.store_url}/category/ALL?st=TOTALSALE&dt=LIST&page={current_page}&size={product_size}")
+
+        # 현재 상점의 전체상품 총 개수 파악
+        # $x('//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong')
+        all_products = driver.find_element(
+            By.XPATH, '//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong'
+        ).get_attribute("textContent")
+        all_products = all_products.replace(",", "")
+        all_products = int(all_products)
+        print(f"전체상품: {all_products}개")
+
+        max_page = all_products / product_size
+        if (all_products % product_size) != 0:
+            max_page = (all_products / product_size) + 1
+        max_page = int(max_page)
+        print(f"마지막 페이지: {max_page}")
+        print()
+
         while True:
-            driver.get(
-                f"{self.guiDto.store_url}/category/ALL?st=TOTALSALE&dt=LIST&page={current_page}&size=80"
-            )
             # 로딩대기
             WebDriverWait(driver, self.default_wait).until(
                 EC.element_to_be_clickable((By.XPATH, '//a[contains(@class, "a:lst.product")]'))
@@ -132,9 +151,9 @@ class ProductCrawlerProcess:
             # 상품 url 저장
             for product_link in product_links:
                 product_url_dto = ProductURLDto()
-                product_url_dto.product_name = product_link.find_element(
-                    By.CSS_SELECTOR, "strong"
-                ).get_attribute("textContent")
+                product_url_dto.product_name = product_link.find_element(By.CSS_SELECTOR, "strong").get_attribute(
+                    "textContent"
+                )
                 product_url_dto.product_url = product_link.get_attribute("href")
                 print(f"{product_url_dto.product_name} {product_url_dto.product_url}")
 
@@ -143,7 +162,21 @@ class ProductCrawlerProcess:
                 else:
                     print(f"파일명에 사용할 수 없는 특수문자 포함")
 
+                # product_url_list.append(product_url_dto.get_dict())
+
             current_page += 1
+
+            # 다음 페이지 버튼 클릭
+            if current_page <= max_page:
+                if current_page % 10 == 1:
+                    driver.find_element(By.XPATH, f'//a[contains(@role, "button")][contains(text(), "다음")]').click()
+                else:
+                    driver.find_element(
+                        By.XPATH, f'//a[contains(@role, "menuitem")][contains(text(), "{current_page}")]'
+                    ).click()
+                print()
+            else:
+                print(f"다음 페이지 없음")
 
         # 데이터 저장
         self.all_product_url_to_excel(product_url_list)
@@ -176,16 +209,12 @@ class ProductCrawlerProcess:
 
         # 카테고리
         try:
-            categories = driver.find_elements(
-                By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]'
-            )
+            categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
             category = categories[-1].get_attribute("href").split("/")[-1]
 
             # 자체 상점의 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
             if len(category) > 10:
-                category = self.cmBot.get_category_id_by_product_name(
-                    product_name, self.all_categories
-                )
+                category = self.cmBot.get_category_id_by_product_name(product_name, self.all_categories)
 
             print(category)
 
@@ -236,15 +265,11 @@ class ProductCrawlerProcess:
             try:
                 driver.implicitly_wait(1)
                 product_main_img = (
-                    driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]')
-                    .get_attribute("src")
-                    .rsplit("?")[0]
+                    driver.find_element(By.XPATH, '//img[contains(@alt, "추가이미지0")]').get_attribute("src").rsplit("?")[0]
                 )
             except:
                 product_main_img = (
-                    driver.find_element(By.XPATH, '//img[contains(@alt, "대표이미지")]')
-                    .get_attribute("src")
-                    .rsplit("?")[0]
+                    driver.find_element(By.XPATH, '//img[contains(@alt, "대표이미지")]').get_attribute("src").rsplit("?")[0]
                 )
             # product_main_img = self.encode_url(product_main_img)
             if product_main_img.find("shop-phinf.pstatic.net") <= -1:
@@ -308,9 +333,7 @@ class ProductCrawlerProcess:
             print(f"옵션이 있습니다.")
 
             # 옵션의 개수를 파악합니다. -> 숨겨져있는 element가 하나씩 더 검색됨...
-            option_selectors = driver.find_elements(
-                By.XPATH, '//a[contains(@class, "a:pcs.opopen")]'
-            )
+            option_selectors = driver.find_elements(By.XPATH, '//a[contains(@class, "a:pcs.opopen")]')
             option_len = int(len(option_selectors) / 2)
             print(option_len)
 
@@ -417,9 +440,7 @@ class ProductCrawlerProcess:
                     ).click()
 
                     # 두번째 옵션 이름 추출
-                    second_option_li_els = driver.find_elements(
-                        By.XPATH, '//ul[@role="listbox"]//li'
-                    )
+                    second_option_li_els = driver.find_elements(By.XPATH, '//ul[@role="listbox"]//li')
 
                     for second_option_li in second_option_li_els:
                         second_option_name = second_option_li.get_attribute("textContent")
@@ -513,9 +534,7 @@ class ProductCrawlerProcess:
                 product_url = str(self.row["상품URL"])
 
                 print(f"{self.i} {product_name} {product_url}")
-                product_detail_dto: ProductDetailDto = self.get_product_detail_dto(
-                    product_name, product_url
-                )
+                product_detail_dto: ProductDetailDto = self.get_product_detail_dto(product_name, product_url)
 
                 print(f"{product_detail_dto.product_name}")
                 productDetailDtos.append(product_detail_dto.get_dict())
