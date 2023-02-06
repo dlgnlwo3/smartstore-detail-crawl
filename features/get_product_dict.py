@@ -34,7 +34,7 @@ class GetProductDict:
         # 이미지 정보
         images: dict = originProduct["images"]
         # 할인율
-        # customerBenefit: dict = originProduct["customerBenefit"]
+        customerBenefit: dict = originProduct["customerBenefit"]
         # 원상품 상세 속성
         detailAttribute: dict = originProduct["detailAttribute"]
         # 옵션 정보
@@ -50,24 +50,29 @@ class GetProductDict:
         # 상품명
         originProduct.update({"name": commonDto.name})
 
-        # 판매가
-        originProduct.update({"salePrice": int(commonDto.salePrice)})
+        # [할인 전 가격]이 빈칸이 아닌 경우
+        if commonDto.before_discount_price != "":
+            print("할인 적용")
+            originProduct.update({"salePrice": int(commonDto.before_discount_price)})
 
-        # 할인율
-        # customerBenefit.update(
-        #     {
-        #         "immediateDiscountPolicy": {
-        #             "discountMethod": {
-        #                 "value": int(commonDto.discountMethod),
-        #                 "unitType": "PERCENT",
-        #             },  # 할인율
-        #             "mobileDiscountMethod": {
-        #                 "value": int(commonDto.discountMethod),
-        #                 "unitType": "PERCENT",
-        #             },  # 할인율
-        #         }
-        #     }
-        # )
+            # 할인율
+            customerBenefit.update(
+                {
+                    "immediateDiscountPolicy": {
+                        "discountMethod": {
+                            "value": int(commonDto.before_discount_price) - int(commonDto.salePrice),
+                            "unitType": "WON",
+                        },  # 할인율
+                        "mobileDiscountMethod": {
+                            "value": int(commonDto.before_discount_price) - int(commonDto.salePrice),
+                            "unitType": "WON",
+                        },  # 할인율
+                    }
+                }
+            )
+        else:
+            # 판매가
+            originProduct.update({"salePrice": int(commonDto.salePrice)})
 
         # 옵션
         print(f"have_option: {commonDto.have_option}")

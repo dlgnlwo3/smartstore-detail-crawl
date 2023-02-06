@@ -11,6 +11,7 @@ class CommonDto:
         self.__media_path = ""  # 이미지 경로
         self.__leafCategoryId = ""  # 카테고리
         self.__name = ""  # 상품명
+        self.__before_discount_price = ""  # 할인 전 가격
         self.__salePrice = ""  # 판매가
         self.__discountMethod = ""  # 할인율
         self.__stockQuantity = ""  # 재고수량
@@ -61,6 +62,14 @@ class CommonDto:
     @name.setter
     def name(self, value):  # setter
         self.__name = value
+
+    @property
+    def before_discount_price(self):  # getter
+        return self.__before_discount_price
+
+    @before_discount_price.setter
+    def before_discount_price(self, value):  # setter
+        self.__before_discount_price = value
 
     @property
     def salePrice(self):  # getter

@@ -170,7 +170,7 @@ class ProductDetailDto:
             "상품URL": self.product_url,
             "카테고리": self.product_category,
             "할인전가격": self.before_discount_price,
-            "가격": self.product_price,
+            "판매가": self.product_price,
             "택배사": self.delivery_company,
             "배송비": self.delivery_fee,
             "메인이미지": self.product_main_img,

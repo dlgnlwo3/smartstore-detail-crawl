@@ -22,7 +22,8 @@ class GetDtos:
         commonDto.media_path = self.media_path
         commonDto.name = str(row["상품명"])
         commonDto.leafCategoryId = str(row["카테고리"])
-        commonDto.salePrice = str(row["가격"])
+        commonDto.before_discount_price = str(row["할인전가격"])
+        commonDto.salePrice = str(row["판매가"])
         commonDto.stockQuantity = str(1)
 
         commonDto.representativeImage = str(row["메인이미지"])
