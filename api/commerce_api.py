@@ -97,12 +97,13 @@ class CommerceAPI:
         return res_json
 
     # 상품명 조회
-    def get_all_product_from_keyword(self, keyword: str):
+    async def get_all_product_from_keyword(self, keyword: str):
         headers = self.get_headers()
         api_url = f"https://api.commerce.naver.com/external/v1/product-models?name={keyword}&page=1&size=100"
         result = requests.get(api_url, headers=headers)
         result_text = result.text.encode("utf-8")
         res_json = json.loads(result_text)
+        await asyncio.sleep(1)
         return res_json
 
     # 상품 id 단일 조회
