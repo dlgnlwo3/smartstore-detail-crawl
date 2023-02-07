@@ -106,6 +106,8 @@ class CommerceImageUploader:
         uploaded_images = [x["url"] for x in uploaded_images]
         print(uploaded_images)
 
+        await asyncio.sleep(1)
+
         return uploaded_images
 
     # Request의 Content-type은 multipart/form-data이어야 합니다.

@@ -59,11 +59,11 @@ class GetProductDict:
                         "discountMethod": {
                             "value": int(commonDto.before_discount_price) - int(commonDto.salePrice),
                             "unitType": "WON",
-                        },  # 할인율
+                        },  # 할인
                         "mobileDiscountMethod": {
                             "value": int(commonDto.before_discount_price) - int(commonDto.salePrice),
                             "unitType": "WON",
-                        },  # 할인율
+                        },  # 할인
                     }
                 }
             )
