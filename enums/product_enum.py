@@ -38,8 +38,8 @@ class productEnum(Enum):
                     # 지역별 추가 배송비 -> AREA_2(내륙/제주 및 도서산간 지역으로 구분(2권역)), AREA_3(내륙/제주/제주 외 도서산간 지역으로 구분(3권역))
                     "deliveryFeeByArea": {
                         "deliveryAreaType": "AREA_3",
-                        "area2extraFee": 20000,
-                        "area3extraFee": 30000,
+                        "area2extraFee": 4000,
+                        "area3extraFee": 5000,
                     },
                     # "differentialFeeByArea": "string",
                 },

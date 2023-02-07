@@ -7,8 +7,6 @@ if 1 == 1:
     warnings.simplefilter("ignore", UserWarning)
     sys.coinit_flags = 2
 
-from common.utils import global_log_append
-
 
 class DeliveryCompanyConverter:
     def __init__(self):

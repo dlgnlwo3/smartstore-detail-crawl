@@ -8,13 +8,11 @@ if 1 == 1:
 from http import HTTPStatus
 import bcrypt
 import pybase64
-import http.client
 import requests
 import json
 import time
 import asyncio
 from common.utils import global_log_append
-import clipboard
 
 
 class CommerceAPI:

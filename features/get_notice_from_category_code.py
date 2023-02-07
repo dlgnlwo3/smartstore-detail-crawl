@@ -7,8 +7,6 @@ if 1 == 1:
     warnings.simplefilter("ignore", UserWarning)
     sys.coinit_flags = 2
 
-from common.utils import global_log_append
-from common.category_file import CategoryFile
 from enums.product_info_provided_notice_enum import ProductInfoProvidedNotice
 from config import *
 

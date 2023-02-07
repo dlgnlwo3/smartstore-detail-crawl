@@ -6,15 +6,12 @@ if 1 == 1:
     sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
     warnings.simplefilter("ignore", UserWarning)
     sys.coinit_flags = 2
-from common.utils import global_log_append
 from dtos.common_dto import CommonDto
 
 from enums.product_enum import productEnum
 from features.convert_delivery_company_code import *
-import time
 import re
 import clipboard
-import json
 from features.get_notice_from_category_code import CategoryCodeConverter
 
 

@@ -3,11 +3,9 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-#!/usr/bin/env python
 from http import HTTPStatus
 import bcrypt
 import pybase64
-import http.client
 import requests
 import json
 import os

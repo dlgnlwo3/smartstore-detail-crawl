@@ -75,8 +75,8 @@ class ProductCrawlerUI(QWidget):
         print(f"search start clicked")
 
         API_setting_tab = APISettingUI()
-        commerceAPI_client_id = API_setting_tab.saved_data[SaveFile.COMMERCEAPI_CLIENT_ID.value]
-        commerceAPI_client_secret = API_setting_tab.saved_data[SaveFile.COMMERCEAPI_CLIENT_SECRET.value]
+        commerceAPI_client_id = API_setting_tab.saved_data[APISaveFile.COMMERCEAPI_CLIENT_ID.value]
+        commerceAPI_client_secret = API_setting_tab.saved_data[APISaveFile.COMMERCEAPI_CLIENT_SECRET.value]
 
         if self.product_list_excel_file.text() == "":
             print(f"선택된 파일이 없습니다.")

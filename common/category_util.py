@@ -2,9 +2,6 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-
-#!/usr/bin/env python
-import os
 from api.commerce_api import CommerceAPI
 
 

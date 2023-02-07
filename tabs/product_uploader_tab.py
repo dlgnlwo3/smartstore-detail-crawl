@@ -7,7 +7,6 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from datetime import *
-import os
 from dtos.gui_dto import GUIDto
 from common.utils import *
 from config import *

@@ -2,7 +2,6 @@ from dtos.common_dto import CommonDto
 from dtos.book_dto import BookDto
 from dtos.dietfood_dto import DietFoodDto
 import pandas as pd
-import time
 
 
 class GetDtos:

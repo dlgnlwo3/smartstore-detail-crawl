@@ -10,7 +10,6 @@ if 1 == 1:
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from datetime import datetime
 from common.chrome import *
 from dtos.gui_dto import *
 from common.utils import global_log_append
