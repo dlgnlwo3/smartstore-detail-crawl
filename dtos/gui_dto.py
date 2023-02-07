@@ -8,8 +8,6 @@ if 1 == 1:
 class GUIDto:
     def __init__(self):
         # API setting
-        self.__openAPI_client_id = ""
-        self.__openAPI_client_secret = ""
         self.__commerceAPI_client_id = ""
         self.__commerceAPI_client_secret = ""
 
@@ -23,22 +21,6 @@ class GUIDto:
         self.__detail_img = ""
 
     # API setting
-    @property
-    def openAPI_client_id(self):  # getter
-        return self.__openAPI_client_id
-
-    @openAPI_client_id.setter
-    def openAPI_client_id(self, value):  # setter
-        self.__openAPI_client_id = value
-
-    @property
-    def openAPI_client_secret(self):  # getter
-        return self.__openAPI_client_secret
-
-    @openAPI_client_secret.setter
-    def openAPI_client_secret(self, value):  # setter
-        self.__openAPI_client_secret = value
-
     @property
     def commerceAPI_client_id(self):  # getter
         return self.__commerceAPI_client_id

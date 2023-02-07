@@ -9,33 +9,19 @@ from PyQt5.QtCore import *
 from datetime import *
 import os
 from dtos.gui_dto import GUIDto
-from threads.product_uploader_thread import ProductUploaderThread
 from common.utils import *
 from config import *
+from threads.product_uploader_thread import ProductUploaderThread
+from tabs.API_setting_tab import APISettingUI
 
 
 class ProductUploaderUI(QWidget):
 
     # 초기화
     def __init__(self):
-
-        self.save_file = os.path.join(os.getcwd(), "save_file.txt")
-        self.save_excel_file_name = ""
-        self.save_client_id = ""
-        self.save_client_secret = ""
-        self.save_media_path_name = ""
-        self.save_detail_img_name = ""
-
-        if os.path.isfile(self.save_file) == False:
-            f = open(self.save_file, "w", encoding="UTF8")
-        else:
-            f = open(self.save_file, "r", encoding="UTF8")
-            self.save_excel_file_name = f.readline().strip()
-            self.save_client_id = f.readline().strip()
-            self.save_client_secret = f.readline().strip()
-            self.save_media_path_name = f.readline().strip()
-            self.save_detail_img_name = f.readline().strip()
-        f.close()
+        print(f"UPLOADER_SAVE_PATH: {UPLOADER_SAVE_PATH}")
+        self.saved_data = get_uploader_save_data()
+        print(self.saved_data)
 
         super().__init__()
         self.initUI()
@@ -52,26 +38,22 @@ class ProductUploaderUI(QWidget):
     def save_button_clicked(self):
 
         excel_file_name = self.excel_file_name.text()
-        client_id = self.client_id.text()
-        client_secret = self.client_secret.text()
         media_path_name = self.media_path_name.text()
         detail_img_name = self.detail_img_name.text()
+
+        dict_save = {
+            UploaderSaveFile.EXCEL_FILE_NAME.value: excel_file_name,
+            UploaderSaveFile.MEDIA_PATH_NAME.value: media_path_name,
+            UploaderSaveFile.DETAIL_IMG_NAME.value: detail_img_name,
+        }
 
         question_msg = "저장하시겠습니까?"
         reply = QMessageBox.question(self, "상태 저장", question_msg, QMessageBox.Yes, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            try:
-                f = open(self.save_file, "w", encoding="UTF8")
-                f.write(f"{excel_file_name}\n")
-                f.write(f"{client_id}\n")
-                f.write(f"{client_secret}\n")
-                f.write(f"{media_path_name}\n")
-                f.write(f"{detail_img_name}\n")
-                f.close()
-                print(f"현재 상태를 저장했습니다.")
-            except Exception as e:
-                print(e)
+            write_uploader_save_data(dict_save)
+            print(f"현재 상태를 저장했습니다.")
+
         else:
             print(f"저장 취소")
 
@@ -79,17 +61,21 @@ class ProductUploaderUI(QWidget):
     def start_button_clicked(self):
         print(f"start")
 
+        API_setting_tab = APISettingUI()
+        commerceAPI_client_id = API_setting_tab.saved_data[APISaveFile.COMMERCEAPI_CLIENT_ID.value]
+        commerceAPI_client_secret = API_setting_tab.saved_data[APISaveFile.COMMERCEAPI_CLIENT_SECRET.value]
+
         if self.excel_file_name.text() == "":
             print(f"엑셀 파일을 선택해주세요.")
             QMessageBox.information(self, "작업 시작", f"엑셀 파일을 선택해주세요.")
             return
 
-        if self.client_id.text() == "":
+        if commerceAPI_client_id == "":
             print(f"API KEY를 입력해주세요")
             QMessageBox.information(self, "작업 시작", f"API KEY를 입력해주세요")
             return
 
-        if self.client_secret.text() == "":
+        if commerceAPI_client_secret == "":
             print(f"API SECRET을 입력해주세요.")
             QMessageBox.information(self, "작업 시작", f"API SECRET을 입력해주세요.")
             return
@@ -106,8 +92,8 @@ class ProductUploaderUI(QWidget):
 
         self.guiDto = GUIDto()
         self.guiDto.excel_file = self.excel_file_name.text()
-        self.guiDto.commerceAPI_client_id = self.client_id.text()
-        self.guiDto.commerceAPI_client_secret = self.client_secret.text()
+        self.guiDto.commerceAPI_client_id = commerceAPI_client_id
+        self.guiDto.commerceAPI_client_secret = commerceAPI_client_secret
         self.guiDto.media_path = self.media_path_name.text()
         self.guiDto.detail_img = self.detail_img_name.text()
 
@@ -174,7 +160,7 @@ class ProductUploaderUI(QWidget):
 
         # 엑셀 그룹박스
         excel_groupbox = QGroupBox("엑셀 파일 선택")
-        self.excel_file_name = QLineEdit(f"{self.save_excel_file_name}")
+        self.excel_file_name = QLineEdit(f"{self.saved_data[UploaderSaveFile.EXCEL_FILE_NAME.value]}")
         self.excel_file_name.setDisabled(True)
         self.excel_file_select_button = QPushButton("파일 선택")
 
@@ -185,46 +171,30 @@ class ProductUploaderUI(QWidget):
         excel_inner_layout.addWidget(self.excel_file_select_button)
         excel_groupbox.setLayout(excel_inner_layout)
 
-        # 로그인 그룹박스
-        login_groupbox = QGroupBox(f"네이버 커머스 API")
-        # self.commerce_check = QCheckBox(f"네이버 커머스 ID")
-        self.client_id_label = QLabel("API KEY")
-        self.client_id = QLineEdit(f"{self.save_client_id}")
-        self.client_secret_label = QLabel("API SECRET")
-        self.client_secret = QLineEdit(f"{self.save_client_secret}")
-
-        login_inner_layout = QVBoxLayout()
-        # login_inner_layout.addWidget(self.commerce_check)
-        login_inner_layout.addWidget(self.client_id_label)
-        login_inner_layout.addWidget(self.client_id)
-        login_inner_layout.addWidget(self.client_secret_label)
-        login_inner_layout.addWidget(self.client_secret)
-        login_groupbox.setLayout(login_inner_layout)
-
-        # 옵션 그룹박스
-        option_groupbox = QGroupBox(f"작동 옵션")
-        self.media_path_name = QLineEdit(f"{self.save_media_path_name}")
+        # 이미지 폴더 그룹박스
+        media_path_groupbox = QGroupBox(f"이미지 폴더 선택")
+        self.media_path_name = QLineEdit(f"{self.saved_data[UploaderSaveFile.MEDIA_PATH_NAME.value]}")
         self.media_path_name.setDisabled(True)
-        self.media_path_select_button = QPushButton("이미지 경로 선택")
+        self.media_path_select_button = QPushButton("폴더 선택")
 
         self.media_path_select_button.clicked.connect(self.media_path_select_button_clicked)
 
-        option_inner_layout = QVBoxLayout()
-        option_inner_layout.addWidget(self.media_path_name)
-        option_inner_layout.addWidget(self.media_path_select_button)
-        option_groupbox.setLayout(option_inner_layout)
+        media_path_inner_layout = QHBoxLayout()
+        media_path_inner_layout.addWidget(self.media_path_name)
+        media_path_inner_layout.addWidget(self.media_path_select_button)
+        media_path_groupbox.setLayout(media_path_inner_layout)
 
         # 상세 이미지 선택 그룹박스
         detail_img_groupbox = QGroupBox("상세 이미지 선택")
-        self.detail_img_name = QLineEdit(f"{self.save_detail_img_name}")
+        self.detail_img_name = QLineEdit(f"{self.saved_data[UploaderSaveFile.DETAIL_IMG_NAME.value]}")
         self.detail_img_name.setDisabled(True)
-        self.detail_img_select_button = QPushButton("선택")
+        self.detail_img_select_button = QPushButton("파일 선택")
 
         self.detail_img_select_button.clicked.connect(self.detail_img_select_button_clicked)
 
         detail_img_inner_layout = QHBoxLayout()
-        detail_img_inner_layout.addWidget(self.detail_img_name, 8)
-        detail_img_inner_layout.addWidget(self.detail_img_select_button, 2)
+        detail_img_inner_layout.addWidget(self.detail_img_name)
+        detail_img_inner_layout.addWidget(self.detail_img_select_button)
         detail_img_groupbox.setLayout(detail_img_inner_layout)
 
         # 작동 그룹박스
@@ -256,13 +226,12 @@ class ProductUploaderUI(QWidget):
         top_layout = QVBoxLayout()
         top_layout.addWidget(excel_groupbox)
 
-        mid_layout = QHBoxLayout()
-        mid_layout.addWidget(login_groupbox, 5)
-        mid_layout.addWidget(option_groupbox, 5)
+        mid_layout = QVBoxLayout()
+        mid_layout.addWidget(media_path_groupbox)
+        mid_layout.addWidget(detail_img_groupbox)
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addStretch(2)
-        bottom_layout.addWidget(detail_img_groupbox, 5)
+        bottom_layout.addStretch(7)
         bottom_layout.addWidget(start_stop_groupbox, 3)
 
         log_layout = QHBoxLayout()

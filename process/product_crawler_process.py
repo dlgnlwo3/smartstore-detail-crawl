@@ -14,16 +14,14 @@ from dtos.product_detail_dto import *
 from dtos.gui_dto import GUIDto
 from common.product_url_file import ProductURLFile
 from common.utils import global_log_append
-from config import TODAY_OUTPUT_FOLDER
 from datetime import datetime
 from selenium.webdriver.support.ui import WebDriverWait
 import urllib.request
 import re
 from common.image_util import remove_bg
-
-from common.category_util import get_category_id_by_product_name
+from common.category_util import get_category_id_from_product_name
 from api.commerce_api import CommerceAPI
-from api.naver_shop import NaverShopAPI
+from config import TODAY_OUTPUT_FOLDER
 
 
 class ProductCrawlerProcess:
@@ -34,21 +32,19 @@ class ProductCrawlerProcess:
         self.current_count = 0
         self.worked_url_list = []
 
+    # GUIDto 생성
     def setGuiDto(self, guiDto: GUIDto):
         self.guiDto = guiDto
 
-    def setAllCategories(self):
-        self.cmBot = CommerceAPI(
-            client_id=self.guiDto.commerceAPI_client_id, client_secret=self.guiDto.commerceAPI_client_secret
-        )
-        self.all_categories: dict = self.cmBot.get_all_category()
+    # 커머스 API봇 생성
+    def setCommerceAPIBot(self):
+        self.cmBot = CommerceAPI(self.guiDto.commerceAPI_client_id, self.guiDto.commerceAPI_client_secret)
 
-    def setNaverShopAPI(self):
-        self.naverBot = NaverShopAPI(self.guiDto.openAPI_client_id, self.guiDto.openAPI_client_secret)
-
+    # 로그 기록
     def setLogger(self, log_msg):
         self.log_msg = log_msg
 
+    # 이미지 저장
     def save_img_from_url(self, url: str, file_name: str, product_name: str):
         store_name = "store_name"
         try:
@@ -95,12 +91,14 @@ class ProductCrawlerProcess:
 
         return file_name
 
+    # 상품 목록 엑셀 저장
     def all_product_url_to_excel(self, products):
         now = datetime.now().strftime("%Y%m%d%H%M%S")
         store_name = self.guiDto.store_url.split("/")[-1]
         product_excel = os.path.join(TODAY_OUTPUT_FOLDER, f"{store_name}_상품목록_{now}.xlsx")
         pd.DataFrame.from_dict(products).to_excel(product_excel, index=False)
 
+    # 상품 상세정보 엑셀 저장
     def product_detail_to_excel(self, products):
         store_name = self.guiDto.product_list_excel_file.split("_")[0]
         product_excel = os.path.join(TODAY_OUTPUT_FOLDER, f"{store_name}_상품상세정보.xlsx")
@@ -234,7 +232,7 @@ class ProductCrawlerProcess:
 
             # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
             if len(category) > 10:
-                category = get_category_id_by_product_name(product_name, self.all_categories, self.naverBot)
+                category = get_category_id_from_product_name(product_name, self.cmBot)
 
             print(category)
 

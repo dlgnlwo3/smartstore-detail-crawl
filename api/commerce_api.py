@@ -98,6 +98,24 @@ class CommerceAPI:
         res_json = json.loads(result_text)
         return res_json
 
+    # 상품명 조회
+    def get_all_product_from_keyword(self, keyword: str):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-models?name={keyword}&page=1&size=100"
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+        return res_json
+
+    # 상품 id 단일 조회
+    def get_product_from_id(self, id):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-models/{id}"
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+        return res_json
+
     # 주소록 조회
     def search_addr(self):
         headers = self.get_headers()
@@ -170,7 +188,7 @@ if __name__ == "__main__":
     # data = searchBot.get_product(product_test)
 
     # 모든 카테고리 조회
-    data = searchBot.get_all_category()
+    # data = searchBot.get_all_category()
 
     # 주소록 조회
     # data = searchBot.search_addr()
@@ -178,8 +196,16 @@ if __name__ == "__main__":
     # 묶음배송그룹 조회
     # data = searchBot.delivery_bundle_group()
 
+    # 상품명 조회
+    # data = searchBot.get_all_product_from_keyword("햇반")
+
+    # 상품 단일 조회
+    data = searchBot.get_product_from_id(5825766254)
+
     print(type(data))
 
     print(data)
+
+    print(len(data))
 
     # clipboard.copy(str(data))

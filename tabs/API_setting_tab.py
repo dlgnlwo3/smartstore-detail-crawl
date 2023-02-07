@@ -7,9 +7,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from datetime import *
-import os
 
-from dtos.gui_dto import GUIDto
 from common.utils import *
 from config import *
 
@@ -33,32 +31,15 @@ class APISettingUI(QWidget):
         self.browser.append(f"[{now}] {str(text)}")
         global_log_append(text)
 
-    # openAPI 체크
-    def check_openAPI(self):
-        openAPI_client_id = self.openAPI_client_id.text()
-        openAPI_client_secret = self.openAPI_client_secret.text()
-        print(f"openAPI_client_id:{openAPI_client_id}, openAPI_client_secret:{openAPI_client_secret}")
-        return openAPI_client_id, openAPI_client_secret
-
-    def check_commerceAPI(self):
-        commerceAPI_client_id = self.commerceAPI_client_id.text()
-        commerceAPI_client_secret = self.commerceAPI_client_secret.text()
-        print(f"commerceAPI_client_id:{commerceAPI_client_id}, commerceAPI_client_secret:{commerceAPI_client_secret}")
-        return commerceAPI_client_id, commerceAPI_client_secret
-
     # 상태 저장
     def save_button_clicked(self):
 
-        openAPI_client_id = self.openAPI_client_id.text()
-        openAPI_client_secret = self.openAPI_client_secret.text()
         commerceAPI_client_id = self.commerceAPI_client_id.text()
         commerceAPI_client_secret = self.commerceAPI_client_secret.text()
 
         dict_save = {
-            SaveFile.OPENAPI_CLIENT_ID.value: openAPI_client_id,
-            SaveFile.OPENAPI_CLIENT_SECRET.value: openAPI_client_secret,
-            SaveFile.COMMERCEAPI_CLIENT_ID.value: commerceAPI_client_id,
-            SaveFile.COMMERCEAPI_CLIENT_SECRET.value: commerceAPI_client_secret,
+            APISaveFile.COMMERCEAPI_CLIENT_ID.value: commerceAPI_client_id,
+            APISaveFile.COMMERCEAPI_CLIENT_SECRET.value: commerceAPI_client_secret,
         }
 
         question_msg = "저장하시겠습니까?"
@@ -73,26 +54,12 @@ class APISettingUI(QWidget):
     # 메인 UI
     def initUI(self):
 
-        # 상품목록 그룹박스
-        openAPI_groupbox = QGroupBox("네이버 오픈 API")
-        self.openAPI_client_id_label = QLabel("API KEY")
-        self.openAPI_client_id = QLineEdit(f"{self.saved_data[SaveFile.OPENAPI_CLIENT_ID.value]}")
-        self.openAPI_client_secret_label = QLabel("API SECRET")
-        self.openAPI_client_secret = QLineEdit(f"{self.saved_data[SaveFile.OPENAPI_CLIENT_SECRET.value]}")
-
-        openAPI_inner_layout = QHBoxLayout()
-        openAPI_inner_layout.addWidget(self.openAPI_client_id_label)
-        openAPI_inner_layout.addWidget(self.openAPI_client_id)
-        openAPI_inner_layout.addWidget(self.openAPI_client_secret_label)
-        openAPI_inner_layout.addWidget(self.openAPI_client_secret)
-        openAPI_groupbox.setLayout(openAPI_inner_layout)
-
-        # 상품상세정보 그룹박스
+        # 커머스 API 그룹박스
         commerceAPI_groupbox = QGroupBox("네이버 커머스 API")
         self.commerceAPI_client_id_label = QLabel("API KEY")
-        self.commerceAPI_client_id = QLineEdit(f"{self.saved_data[SaveFile.COMMERCEAPI_CLIENT_ID.value]}")
+        self.commerceAPI_client_id = QLineEdit(f"{self.saved_data[APISaveFile.COMMERCEAPI_CLIENT_ID.value]}")
         self.commerceAPI_client_secret_label = QLabel("API SECRET")
-        self.commerceAPI_client_secret = QLineEdit(f"{self.saved_data[SaveFile.COMMERCEAPI_CLIENT_SECRET.value]}")
+        self.commerceAPI_client_secret = QLineEdit(f"{self.saved_data[APISaveFile.COMMERCEAPI_CLIENT_SECRET.value]}")
 
         commerceAPI_inner_layout = QHBoxLayout()
         commerceAPI_inner_layout.addWidget(self.commerceAPI_client_id_label)
@@ -121,7 +88,6 @@ class APISettingUI(QWidget):
 
         # 레이아웃 배치
         top_layout = QVBoxLayout()
-        top_layout.addWidget(openAPI_groupbox)
         top_layout.addWidget(commerceAPI_groupbox)
 
         mid_layout = QHBoxLayout()

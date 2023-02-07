@@ -30,7 +30,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v0.0.7 (카테고리 정리)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v0.0.8 (openAPI 삭제 및 정리)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
@@ -85,9 +85,9 @@ class MainUI(QWidget):
         self.icon.get(QNetworkRequest(QUrl(ICON_IMAGE_URL)))
 
         # 탭 초기화
+        self.API_setting_tab = APISettingUI()
         self.product_crawler_tab = ProductCrawlerUI()
         self.product_uploader_tab = ProductUploaderUI()
-        self.API_setting_tab = APISettingUI()
 
         # 탭 추가
         tabs = QTabWidget()
@@ -100,8 +100,8 @@ class MainUI(QWidget):
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle("스마트스토어 v0.0.6")
-        self.resize(800, 800)
+        self.setWindowTitle("스마트스토어 v0.0.8")
+        self.resize(600, 600)
         self.center()
         self.show()
 
