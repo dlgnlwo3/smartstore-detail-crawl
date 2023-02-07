@@ -20,7 +20,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 import urllib.request
 import re
 from common.image_util import remove_bg
-from api.category import CommerceCategory
+
+from common.category_util import get_category_id_by_product_name
+from api.commerce_api import CommerceAPI
+from api.naver_shop import NaverShopAPI
 
 
 class ProductCrawlerProcess:
@@ -30,14 +33,18 @@ class ProductCrawlerProcess:
         self.driver.implicitly_wait(self.default_wait)
         self.current_count = 0
         self.worked_url_list = []
-        self.setAllCategories()
 
     def setGuiDto(self, guiDto: GUIDto):
         self.guiDto = guiDto
 
     def setAllCategories(self):
-        self.cmBot = CommerceCategory("3PGRSqZEvqy6NtPG3Loc32", "$2a$04$gOILS2yCAY7EMH52LvbyFu")
+        self.cmBot = CommerceAPI(
+            client_id=self.guiDto.commerceAPI_client_id, client_secret=self.guiDto.commerceAPI_client_secret
+        )
         self.all_categories: dict = self.cmBot.get_all_category()
+
+    def setNaverShopAPI(self):
+        self.naverBot = NaverShopAPI(self.guiDto.openAPI_client_id, self.guiDto.openAPI_client_secret)
 
     def setLogger(self, log_msg):
         self.log_msg = log_msg
@@ -227,11 +234,12 @@ class ProductCrawlerProcess:
 
             # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
             if len(category) > 10:
-                category = self.cmBot.get_category_id_by_product_name(product_name, self.all_categories)
+                category = get_category_id_by_product_name(product_name, self.all_categories, self.naverBot)
 
             print(category)
 
         except Exception as e:
+            print(e)
             print("카테고리 오류")
         finally:
             product_detail_dto.product_category = category
@@ -521,7 +529,6 @@ class ProductCrawlerProcess:
                 pass
 
         except Exception as e:
-            print(e)
             print("옵션 오류")
         finally:
             driver.implicitly_wait(self.default_wait)

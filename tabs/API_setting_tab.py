@@ -9,7 +9,6 @@ from PyQt5.QtCore import *
 from datetime import *
 import os
 
-from threads.product_crawler_thread import ProductDetailSearchThread, ProductListSearchThread
 from dtos.gui_dto import GUIDto
 from common.utils import *
 from config import *
@@ -34,6 +33,19 @@ class APISettingUI(QWidget):
         self.browser.append(f"[{now}] {str(text)}")
         global_log_append(text)
 
+    # openAPI 체크
+    def check_openAPI(self):
+        openAPI_client_id = self.openAPI_client_id.text()
+        openAPI_client_secret = self.openAPI_client_secret.text()
+        print(f"openAPI_client_id:{openAPI_client_id}, openAPI_client_secret:{openAPI_client_secret}")
+        return openAPI_client_id, openAPI_client_secret
+
+    def check_commerceAPI(self):
+        commerceAPI_client_id = self.commerceAPI_client_id.text()
+        commerceAPI_client_secret = self.commerceAPI_client_secret.text()
+        print(f"commerceAPI_client_id:{commerceAPI_client_id}, commerceAPI_client_secret:{commerceAPI_client_secret}")
+        return commerceAPI_client_id, commerceAPI_client_secret
+
     # 상태 저장
     def save_button_clicked(self):
 
@@ -50,7 +62,7 @@ class APISettingUI(QWidget):
         }
 
         question_msg = "저장하시겠습니까?"
-        reply = QMessageBox.question(self, "상태 저장", question_msg, QMessageBox.Yes, QMessageBox.No)
+        reply = QMessageBox.question(self, "API키 저장", question_msg, QMessageBox.Yes, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
             write_api_save_data(dict_save)
@@ -90,7 +102,7 @@ class APISettingUI(QWidget):
         commerceAPI_groupbox.setLayout(commerceAPI_inner_layout)
 
         # 상태 저장 그룹박스
-        save_groupbox = QGroupBox(f"작업 시작")
+        save_groupbox = QGroupBox(f"API키 저장")
         self.save_button = QPushButton("저장")
 
         self.save_button.clicked.connect(self.save_button_clicked)

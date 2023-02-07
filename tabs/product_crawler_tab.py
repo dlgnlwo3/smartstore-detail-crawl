@@ -9,10 +9,10 @@ from PyQt5.QtCore import *
 from datetime import *
 import os
 
+from tabs.API_setting_tab import APISettingUI
 from threads.product_crawler_thread import ProductDetailSearchThread, ProductListSearchThread
 from dtos.gui_dto import GUIDto
 from common.utils import *
-import webbrowser
 from config import *
 
 
@@ -75,15 +75,48 @@ class ProductCrawlerUI(QWidget):
     def product_detail_search_start_button_clicked(self):
         print(f"search start clicked")
 
+        API_setting_tab = APISettingUI()
+
+        openAPI_client_id = API_setting_tab.saved_data[SaveFile.OPENAPI_CLIENT_ID.value]
+        openAPI_client_secret = API_setting_tab.saved_data[SaveFile.OPENAPI_CLIENT_SECRET.value]
+        commerceAPI_client_id = API_setting_tab.saved_data[SaveFile.COMMERCEAPI_CLIENT_ID.value]
+        commerceAPI_client_secret = API_setting_tab.saved_data[SaveFile.COMMERCEAPI_CLIENT_SECRET.value]
+
         if self.product_list_excel_file.text() == "":
             print(f"선택된 파일이 없습니다.")
             self.log_append(f"선택된 파일이 없습니다.")
             return
 
+        if openAPI_client_id == "":
+            print(f"네이버 오픈 API KEY를 입력해주세요.")
+            self.log_append(f"네이버 오픈 API KEY를 입력해주세요.")
+            return
+
+        if openAPI_client_secret == "":
+            print(f"네이버 오픈 API SECRET을 입력해주세요.")
+            self.log_append(f"네이버 오픈 API SECRET을 입력해주세요.")
+            return
+
+        if commerceAPI_client_id == "":
+            print(f"네이버 커머스 API KEY를 입력해주세요.")
+            self.log_append(f"네이버 커머스 API KEY를 입력해주세요.")
+            return
+
+        if commerceAPI_client_secret == "":
+            print(f"네이버 커머스 API SECRET을 입력해주세요.")
+            self.log_append(f"네이버 커머스 API SECRET을 입력해주세요.")
+            return
+
         guiDto = GUIDto()
         guiDto.product_list_excel_file = self.product_list_excel_file.text()
+        guiDto.openAPI_client_id = openAPI_client_id
+        guiDto.openAPI_client_secret = openAPI_client_secret
+        guiDto.commerceAPI_client_id = commerceAPI_client_id
+        guiDto.commerceAPI_client_secret = commerceAPI_client_secret
 
-        print(f"상품목록 검색을 시작합니다. {guiDto.product_list_excel_file}")
+        print(
+            f"상품목록 검색을 시작합니다. {guiDto.product_list_excel_file} {guiDto.openAPI_client_id} {guiDto.openAPI_client_secret} {guiDto.commerceAPI_client_id} {guiDto.commerceAPI_client_secret}"
+        )
 
         self.product_detail_search_thread = ProductDetailSearchThread()
         self.product_detail_search_thread.log_msg.connect(self.log_append)

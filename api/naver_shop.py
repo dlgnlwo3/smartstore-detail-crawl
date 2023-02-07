@@ -11,27 +11,23 @@ import pandas as pd
 
 ## 한번에 10개까지 요청가능
 class NaverShopAPI:
-    def __init__(self):
-        self.account = [
-            {"CLIENT_ID": "G18H9N2YEDZHfGa0ddXt", "CLIENT_SECRET": "gRuXVfYR8w", "COMPANY": "김범관"},
-        ]
-        self.account_i = 0
-
-    def setKeys(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
+        self.initData()
 
     def initData(self):
-        self.CLIENT_ID = "G18H9N2YEDZHfGa0ddXt"
-        self.CLIENT_SECRET = "gRuXVfYR8w"
+        # asyncio.run(self.set_client_secret_sign())
+        # asyncio.run(self.set_token())
+        print()
 
     def fetch_sync_total_count(self, keyword):
         total_count = None
         ENCTEXT = urllib.parse.quote(keyword)
         url = "https://openapi.naver.com/v1/search/shop?display=100&query=" + ENCTEXT  # JSON 결과
         request = Request(url)
-        request.add_header("X-Naver-Client-Id", self.account[self.account_i]["CLIENT_ID"])
-        request.add_header("X-Naver-Client-Secret", self.account[self.account_i]["CLIENT_SECRET"])
+        request.add_header("X-Naver-Client-Id", self.client_id)
+        request.add_header("X-Naver-Client-Secret", self.client_secret)
         response = urlopen(request)
         rescode = response.getcode()
         response_body = response.read()
@@ -46,8 +42,8 @@ class NaverShopAPI:
         ENCTEXT = urllib.parse.quote(keyword)
         url = "https://openapi.naver.com/v1/search/shop?display=100&query=" + ENCTEXT  # JSON 결과
         request = Request(url)
-        request.add_header("X-Naver-Client-Id", self.account[self.account_i]["CLIENT_ID"])
-        request.add_header("X-Naver-Client-Secret", self.account[self.account_i]["CLIENT_SECRET"])
+        request.add_header("X-Naver-Client-Id", self.client_id)
+        request.add_header("X-Naver-Client-Secret", self.client_secret)
         response = urlopen(request)
         rescode = response.getcode()
         response_body = response.read()
@@ -84,9 +80,12 @@ if __name__ == "__main__":
 
     keyword = "커클랜드 시그니춰 통후추 399g"
     start_time = timer()
-    naverBot = NaverShopAPI()
+
+    CLIENT_ID = "G18H9N2YEDZHfGa0ddXt"
+    CLIENT_SECRET = "gRuXVfYR8w"
+
+    naverBot = NaverShopAPI(CLIENT_ID, CLIENT_SECRET)
     items = naverBot.fetch_sync_items(keyword)
-    print(type(items))
     print(items)
     # df_items = pd.DataFrame.from_dict(items)
     # df_items.to_excel(f"하기스.xlsx")
