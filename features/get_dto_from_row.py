@@ -38,6 +38,9 @@ class GetDtos:
         commonDto.optionStockQuantity = str(1)  # 옵션재고
         commonDto.optionPrices = str(row["옵션가격"])
 
+        # 판매자 설정 코드
+        commonDto.sellerManagementCode = str(row["상품URL"])
+
         return commonDto
 
     # DietFoodDto

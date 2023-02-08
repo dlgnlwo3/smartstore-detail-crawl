@@ -52,14 +52,15 @@ class ProductUploaderProcess:
 
             get_dtos.get_common_dto_list()
 
-            get_product_dict = GetProductDict()
-
-            get_product_dict.get_all_categories(self.all_categories)
-
             commonDto: CommonDto
             for commonDto in get_dtos.common_dto_list:
 
                 try:
+                    # 0. 값 초기화
+                    get_product_dict = GetProductDict()
+
+                    get_product_dict.get_all_categories(self.all_categories)
+
                     # 1. 로컬의 이미지를 네이버에 업로드하고 url로 가져옵니다.
                     commonDto = self.convert_img_url(commonDto)
 

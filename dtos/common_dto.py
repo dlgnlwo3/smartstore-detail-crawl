@@ -28,6 +28,7 @@ class CommonDto:
         self.__minorPurchasable = bool  # 미성년자구매
         self.__deliveryCompany = ""  # 택배사코드
         self.__baseFee = ""  # 기본배송비
+
         self.__sellerManagementCode = ""  # 판매자 설정 코드
 
         self.__sellerTags = ""  # 검색설정 (해시태그)
@@ -203,7 +204,12 @@ class CommonDto:
         return self.__sellerManagementCode
 
     @sellerManagementCode.setter
-    def sellerManagementCode(self, value):  # setter
+    def sellerManagementCode(self, value: str):  # setter
+        if value != "":
+            if value.find("smartstore.naver.com") > -1:
+                smart_store_url = value.split("/")
+                value = smart_store_url[3] + "-" + smart_store_url[5]
+            value = value[:30]
         self.__sellerManagementCode = value
 
     @property

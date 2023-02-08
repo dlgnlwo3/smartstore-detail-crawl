@@ -405,7 +405,7 @@ class ProductCrawlerProcess:
                         # 옵션이름
                         option_name = option_li.get_attribute("textContent")
 
-                        # 옵션가격
+                        # 옵션가격 -> 옵션 가격이 +인 경우에만 적용... -인 경우에도 추가해야 함
                         option_price = "0"
                         try:
                             price_pattern = r"[\+]+\d+['원']"
@@ -418,6 +418,7 @@ class ProductCrawlerProcess:
 
                         option_name = option_name.replace(f" (품절)", "")
                         option_name = option_name.replace(f" (+{option_price}원)", "")
+                        option_name = option_name.replace(f" (-{option_price}원)", "")
                         option_names.append(f"{option_name}")
                         print(option_name)
 
@@ -508,6 +509,7 @@ class ProductCrawlerProcess:
                         # 옵션이름
                         second_option_name = second_option_name.replace(" (품절)", "")
                         second_option_name = second_option_name.replace(f" (+{option_price}원)", "")
+                        second_option_name = second_option_name.replace(f" (-{option_price}원)", "")
                         print(f"{first_option_name},{second_option_name}")
                         option_names.append(f"{first_option_name},{second_option_name}")
 

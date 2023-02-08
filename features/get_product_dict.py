@@ -13,11 +13,14 @@ from features.convert_delivery_company_code import *
 import re
 import clipboard
 from features.get_notice_from_category_code import CategoryCodeConverter
+from copy import deepcopy
 
 
 class GetProductDict:
     def __init__(self):
-        self.product = productEnum.PRODUCT.value
+        product = productEnum.PRODUCT.value
+        self.product = deepcopy(product)
+        print(self.product)
         print()
 
     def get_all_categories(self, all_categories):
@@ -48,7 +51,7 @@ class GetProductDict:
         originProduct.update({"name": commonDto.name})
 
         # [할인 전 가격]이 빈칸이 아닌 경우
-        if commonDto.before_discount_price != "":
+        if commonDto.before_discount_price:
             print("할인 적용")
             originProduct.update({"salePrice": int(commonDto.before_discount_price)})
 
@@ -106,6 +109,9 @@ class GetProductDict:
         # 미성년자구매
         detailAttribute.update({"minorPurchasable": bool(commonDto.minorPurchasable)})
 
+        # 판매자 코드 설정
+        detailAttribute.update({"sellerCodeInfo": {"sellerManagementCode": f"{commonDto.sellerManagementCode}"}})
+
         # 상품상세정보제공고시
         if commonDto.leafCategoryId:
             print("카테고리코드 -> 상품상세정보제공고시")
@@ -158,9 +164,9 @@ class GetProductDict:
         # 검색설정
         # tags_to_dict = self.get_sellerTags(commonDto.sellerTags)
         # detailAttribute.update({"sellerTags": tags_to_dict})
-        print(product)
+        # print(product)
 
-        clipboard.copy(str(product))
+        # clipboard.copy(str(product))
 
         return product
 
