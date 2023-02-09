@@ -23,7 +23,7 @@ class GetDtos:
         commonDto.leafCategoryId = str(row["카테고리"])
         commonDto.before_discount_price = str(row["할인전가격"])
         commonDto.salePrice = str(row["판매가"])
-        commonDto.stockQuantity = str(1)
+        commonDto.stockQuantity = str(999)  # 상품재고
 
         commonDto.representativeImage = str(row["메인이미지"])
         commonDto.optionalImages = str(row["추가이미지"])
@@ -35,7 +35,7 @@ class GetDtos:
         commonDto.have_option = str(row["옵션"])
         commonDto.optionGroupNames = str(row["옵션그룹"])
         commonDto.optionNames = str(row["옵션이름"])
-        commonDto.optionStockQuantity = str(1)  # 옵션재고
+        commonDto.optionStockQuantity = str(999)  # 옵션재고
         commonDto.optionPrices = str(row["옵션가격"])
 
         # 판매자 설정 코드

@@ -227,7 +227,7 @@ class GetProductDict:
         optionCombinations = []
         optionNames = commonDto.optionNames.split(";")
         optionPrices = commonDto.optionPrices.split(";")
-        optionStockQuantity = 1
+        optionStockQuantity = commonDto.optionStockQuantity
 
         for i, option_name in enumerate(optionNames):
             print(f"{i} {option_name} {optionPrices[i]} {optionStockQuantity}")

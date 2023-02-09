@@ -5,6 +5,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as wait
 import time
+from selenium import webdriver
 
 # element로 마우스 이동  : ActionChains(driver).move_to_element(ref)
 # element 마우스 클릭	: ActionChains(driver).click(ref)
@@ -35,7 +36,7 @@ import time
 # console.log( getElementByXpath("//html[1]/body[1]/div[1]") );
 
 
-def switch_to_default_frame(driver):
+def switch_to_default_frame(driver: webdriver.Chrome):
     driver.switch_to.default_content()
 
 

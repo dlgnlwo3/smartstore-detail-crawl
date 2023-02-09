@@ -172,6 +172,38 @@ class CommerceAPI:
 
         return result, fail_reason
 
+    # 전체 속성값 조회
+    def get_product_attribute_value_units(self):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-attributes/attribute-value-units"
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+
+        return res_json
+
+    # 카테고리별 속성값 조회
+    def get_product_attribute_values_from_category_id(self, category_id):
+        headers = self.get_headers()
+        api_url = (
+            f"https://api.commerce.naver.com/external/v1/product-attributes/attribute-values?categoryId={category_id}"
+        )
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+
+        return res_json
+
+    # 카테고리별 속성 조회
+    def get_product_attributes_from_category_id(self, category_id):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-attributes/attributes?categoryId={category_id}"
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        res_json = json.loads(result_text)
+
+        return res_json
+
 
 if __name__ == "__main__":
 
@@ -179,12 +211,15 @@ if __name__ == "__main__":
     client_id = "1yhn7qj8fvbQYerxmGO8ja"
     client_secret = "$2a$04$3iOzPhDU7KJN247s6UTSCO"
 
-    product_test = 7984456905
+    product_id = 7984456905
+
+    # 50002627 -> 스포츠/레저>등산>등산의류>재킷
+    category_id = 50002627
 
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
     # 상품 조회
-    # data = searchBot.get_product(product_test)
+    # data = searchBot.get_product(product_id)
 
     # 모든 카테고리 조회
     # data = searchBot.get_all_category()
@@ -199,7 +234,16 @@ if __name__ == "__main__":
     # data = searchBot.get_all_product_from_keyword("햇반")
 
     # 상품 단일 조회
-    data = searchBot.get_product_from_id(5825766254)
+    # data = searchBot.get_product_from_id(5825766254)
+
+    # 전체 속성값 조회
+    # data = searchBot.get_product_attributes()
+
+    # 카테고리별 속성값 조회
+    data = searchBot.get_product_attribute_values_from_category_id(category_id)
+
+    # 카테고리별 속성 조회
+    # data = searchBot.get_product_attributes_from_category_id(category_id)
 
     print(type(data))
 
