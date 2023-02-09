@@ -16,6 +16,7 @@ def get_category_id_from_product_name(product_name: str, cmBot: CommerceAPI):
 
         if data["totalElements"] == 0:
             product_name = product_name[: product_name.rfind(" ")]
+            print(product_name)
             data = get_data(product_name, cmBot)
             print(data)
 
@@ -26,6 +27,7 @@ def get_category_id_from_product_name(product_name: str, cmBot: CommerceAPI):
     try:
         category_id = data["contents"][0]["categoryId"]
     except Exception as e:
+        category_id = ""
         print(f"{product_name} 검색 결과가 없습니다.")
 
     return category_id
