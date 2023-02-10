@@ -25,8 +25,6 @@ class CommerceAPI:
     def initData(self):
         asyncio.run(self.set_client_secret_sign())
         asyncio.run(self.set_token())
-        # self.set_client_secret_sign()
-        # self.set_token()
 
     def get_timestamp(self):
         return round(time.time() * 1000)
@@ -40,9 +38,7 @@ class CommerceAPI:
             "grant_type": "client_credentials",
             "type": "SELF",
         }
-
         print(params)
-
         res = requests.post(auth_url, params=params)
         print(res.text)
 
@@ -62,11 +58,7 @@ class CommerceAPI:
         # self.token = "2DtQ2IW1TX2ZLuMD6Qkesw=="
         return {"Authorization": f"Bearer {self.token}", "content-type": "application/json"}
 
-    def search(self):
-        print("search")
-
     async def set_client_secret_sign(self):
-
         self.timestamp = self.get_timestamp()
         # 밑줄로 연결하여 password 생성
         password = self.client_id + "_" + str(self.timestamp)
@@ -74,7 +66,6 @@ class CommerceAPI:
         hashed = bcrypt.hashpw(password.encode("utf-8"), self.client_secret.encode("utf-8"))
         # base64 인코딩
         self.client_secret_sign = pybase64.standard_b64encode(hashed).decode("utf-8")
-
         await asyncio.sleep(1)
 
     # 상품 업로드
@@ -120,25 +111,6 @@ class CommerceAPI:
             print("실패")
 
         return result, fail_reason
-
-        # res = requests.post(api_url, headers=headers, json=originProduct)
-        # print("상품등록결과")
-
-        # if res.status_code == HTTPStatus.OK:
-        #     print("성공")
-        #     result = True
-        #     fail_reason = ""
-        # else:
-        #     print("실패")
-        #     print(res.text)
-        #     res_json = json.loads(res.text)
-        #     res_json = res_json["invalidInputs"][0]
-        #     global_log_append("[등록 실패]")
-        #     global_log_append(res_json)
-        #     self.initData()
-        #     fail_reason = f"{res_json['name']} {res_json['message']}"
-
-        # return result, fail_reason
 
     # 상품번호 조회
     @retry(
@@ -265,21 +237,6 @@ class CommerceAPI:
             raise Exception(result_json)
 
         return result_json
-
-        # upload_result = requests.get(api_url, headers=headers)
-        # result_text = upload_result.text
-        # res_json = json.loads(result_text)
-        # print(upload_result)
-        # addressBooks = res_json["addressBooks"]
-
-        # print("==주소록==")
-        # for addr in addressBooks:
-        #     if str(addr["name"]).find("빅스타") > -1:
-        #         print(addr)
-        #         # print(addr["addressBookNo"], addr["name"])
-        # print()
-
-        # return addressBooks
 
     # 묶음배송그룹 조회
     @retry(

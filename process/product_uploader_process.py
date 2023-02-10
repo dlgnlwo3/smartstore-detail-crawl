@@ -58,16 +58,6 @@ class ProductUploaderProcess:
                 try:
                     print(f"{i}회차 작업")
 
-                    # 토큰 만료 방지
-                    if i % 300 == 0:
-                        self.imageUploader = CommerceImageUploader(
-                            self.commerceAPI_client_id, self.commerceAPI_client_secret
-                        )
-
-                        self.addBot = CommerceAPI(
-                            client_id=self.commerceAPI_client_id, client_secret=self.commerceAPI_client_secret
-                        )
-
                     # 0. 값 초기화
                     get_product_dict = GetProductDict()
 

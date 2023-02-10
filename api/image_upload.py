@@ -30,18 +30,13 @@ class CommerceImageUploader:
 
     # 전자서명 (self.timestamp, self.client_secret_sign)
     async def set_client_secret_sign(self):
-
         self.timestamp = round(time.time() * 1000)
-
         # 밑줄로 연결하여 password 생성
         password = self.client_id + "_" + str(self.timestamp)
-
         # bcrypt 해싱
         hashed = bcrypt.hashpw(password.encode("utf-8"), self.client_secret.encode("utf-8"))
-
         # base64 인코딩 -> param으로 사용될 것
         self.client_secret_sign = pybase64.standard_b64encode(hashed).decode("utf-8")
-
         await asyncio.sleep(1)
 
     # 토큰 (self.token)

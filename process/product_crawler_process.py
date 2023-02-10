@@ -589,11 +589,6 @@ class ProductCrawlerProcess:
 
                 print(f"{self.i} {product_name} {product_url}")
 
-                # 네이버 커머스 API 토큰 호출 후 30분이 경과하면 만료되는 것으로 추정
-                # 대비책으로 물품 100개 검색 후 토큰을 재호출 하는 것으로 함
-                if self.i % 100 == 0:
-                    self.setCommerceAPIBot()
-
                 product_detail_dto: ProductDetailDto = self.get_product_detail_dto(product_name, product_url)
 
                 print(f"{product_detail_dto.product_name}")
