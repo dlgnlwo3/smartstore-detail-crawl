@@ -13,6 +13,7 @@ import json
 import time
 import asyncio
 from common.utils import global_log_append
+from tenacity import retry, wait_fixed, stop_after_attempt
 
 
 class CommerceAPI:
@@ -46,15 +47,19 @@ class CommerceAPI:
         print(res.text)
 
         if res.status_code == HTTPStatus.OK:
-            print("토큰가져오기 성공")
+            print("토큰 획득 성공")
             data = json.loads(str(res.text))
             self.token = data["access_token"]
+            self.expires_in = data["expires_in"]  # 남은 유효 시간
+            self.token_type = data["token_type"]
             await asyncio.sleep(1)
         else:
-            global_log_append("토큰 가져오기 실패")
-            print("토큰 가져오기 실패")
+            global_log_append("토큰 획득 실패")
+            print("토큰 획득 실패")
 
     def get_headers(self):
+        # 유효 시간이 지난 테스트용 토큰
+        # self.token = "2DtQ2IW1TX2ZLuMD6Qkesw=="
         return {"Authorization": f"Bearer {self.token}", "content-type": "application/json"}
 
     def search(self):
@@ -72,137 +77,311 @@ class CommerceAPI:
 
         await asyncio.sleep(1)
 
-    # 상품번호 조회
-    def get_product(self, channelProductNo):
-        import http.client
-
-        conn = http.client.HTTPSConnection("api.commerce.naver.com")
-        headers = self.get_headers()
-
-        conn.request("GET", f"/external/v2/products/channel-products/{channelProductNo}", headers=headers)
-
-        res = conn.getresponse()
-        res_data = res.read()
-        txt = res_data.decode("utf-8")
-        data = json.loads(txt)
-        return data
-
-    # 모든 카테고리 조회
-    def get_all_category(self):
-        api_url = "https://api.commerce.naver.com/external/v1/categories"
-        headers = self.get_headers()
-        upload_result = requests.get(api_url, headers=headers)
-        result_text = upload_result.text.encode("utf-8")
-        res_json = json.loads(result_text)
-        return res_json
-
-    # 상품명 조회
-    async def get_all_product_from_keyword(self, keyword: str):
-        headers = self.get_headers()
-        api_url = f"https://api.commerce.naver.com/external/v1/product-models?name={keyword}&page=1&size=100"
-        result = requests.get(api_url, headers=headers)
-        result_text = result.text.encode("utf-8")
-        res_json = json.loads(result_text)
-        await asyncio.sleep(1)
-        return res_json
-
-    # 상품 id 단일 조회
-    def get_product_from_id(self, id):
-        headers = self.get_headers()
-        api_url = f"https://api.commerce.naver.com/external/v1/product-models/{id}"
-        result = requests.get(api_url, headers=headers)
-        result_text = result.text.encode("utf-8")
-        res_json = json.loads(result_text)
-        return res_json
-
-    # 주소록 조회
-    def search_addr(self):
-        headers = self.get_headers()
-        api_url = "https://api.commerce.naver.com/external/v1/seller/addressbooks-for-page?page=1"
-        upload_result = requests.get(api_url, headers=headers)
-        result_text = upload_result.text
-        res_json = json.loads(result_text)
-        addressBooks = res_json["addressBooks"]
-
-        print("==주소록==")
-        for addr in addressBooks:
-            if str(addr["name"]).find("빅스타") > -1:
-                print(addr)
-                # print(addr["addressBookNo"], addr["name"])
-        print()
-
-        return addressBooks
-
-    # 묶음배송그룹 조회
-    def delivery_bundle_group(self):
-        headers = self.get_headers()
-        api_url = "https://api.commerce.naver.com/external/v1/product-delivery-info/bundle-groups?base_group=true"
-        upload_result = requests.get(api_url, headers=headers)
-        result_text = upload_result.text
-        res_json = json.loads(result_text)
-
-        print("==묶음배송그룹==")
-        bundle_groups = res_json["contents"]
-        for group in bundle_groups:
-            print(group["id"], group["name"])
-
-        return bundle_groups
-
     # 상품 업로드
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
     def add_product(self, originProduct: dict):
-        print("product_add")
-        result = False
-        api_url = "https://api.commerce.naver.com/external/v2/products"
         headers = self.get_headers()
-        res = requests.post(api_url, headers=headers, json=originProduct)
-        print("상품등록결과")
+        api_url = "https://api.commerce.naver.com/external/v2/products"
+        result = False
 
-        if res.status_code == HTTPStatus.OK:
-            print("등록 성공")
+        result = requests.post(api_url, headers=headers, json=originProduct)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        # 성공한 경우 200
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
             result = True
             fail_reason = ""
+
+        # 입력한 값이 유효하지 않을 경우 400
+        elif result.status_code == HTTPStatus.BAD_REQUEST:
+            print("실패")
+            fail_reason = result_json["invalidInputs"][0]
+            global_log_append(result_json)
+
+        # 토큰이 유효하지 않을 경우 401
+        elif result.status_code == HTTPStatus.UNAUTHORIZED:
+            print("실패")
+            fail_reason = result_json
+            global_log_append(fail_reason)
+            self.initData()
+            raise Exception(result_json)
+
+        # 그 외의 경우
         else:
-            print(res.text)
-            res_json = json.loads(res.text)
-            res_json = res_json["invalidInputs"][0]
-            print("등록 실패")
-            global_log_append("[등록 실패]")
-            global_log_append(res_json)
-            fail_reason = f"{res_json['name']} {res_json['message']}"
+            result = False
+            fail_reason = result_json
+            print("실패")
 
         return result, fail_reason
 
+        # res = requests.post(api_url, headers=headers, json=originProduct)
+        # print("상품등록결과")
+
+        # if res.status_code == HTTPStatus.OK:
+        #     print("성공")
+        #     result = True
+        #     fail_reason = ""
+        # else:
+        #     print("실패")
+        #     print(res.text)
+        #     res_json = json.loads(res.text)
+        #     res_json = res_json["invalidInputs"][0]
+        #     global_log_append("[등록 실패]")
+        #     global_log_append(res_json)
+        #     self.initData()
+        #     fail_reason = f"{res_json['name']} {res_json['message']}"
+
+        # return result, fail_reason
+
+    # 상품번호 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    def get_product(self, channelProductNo):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v2/products/channel-products/{channelProductNo}"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
+
+    # 모든 카테고리 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    def get_all_category(self):
+        headers = self.get_headers()
+        api_url = "https://api.commerce.naver.com/external/v1/categories"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
+
+    # 상품명 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    async def get_all_product_from_keyword(self, keyword: str):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-models?name={keyword}&page=1&size=100"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        await asyncio.sleep(1)
+        return result_json
+
+    # 상품 id 단일 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    def get_product_from_id(self, id):
+        headers = self.get_headers()
+        api_url = f"https://api.commerce.naver.com/external/v1/product-models/{id}"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
+
+    # 주소록 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    def search_addr(self):
+        headers = self.get_headers()
+        api_url = "https://api.commerce.naver.com/external/v1/seller/addressbooks-for-page?page=1"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
+
+        # upload_result = requests.get(api_url, headers=headers)
+        # result_text = upload_result.text
+        # res_json = json.loads(result_text)
+        # print(upload_result)
+        # addressBooks = res_json["addressBooks"]
+
+        # print("==주소록==")
+        # for addr in addressBooks:
+        #     if str(addr["name"]).find("빅스타") > -1:
+        #         print(addr)
+        #         # print(addr["addressBookNo"], addr["name"])
+        # print()
+
+        # return addressBooks
+
+    # 묶음배송그룹 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    def delivery_bundle_group(self):
+        headers = self.get_headers()
+        api_url = "https://api.commerce.naver.com/external/v1/product-delivery-info/bundle-groups?base_group=true"
+
+        result = requests.get(api_url, headers=headers)
+        result_text = result.text.encode("utf-8")
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
+
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
+
     # 전체 속성값 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
     def get_product_attribute_value_units(self):
         headers = self.get_headers()
         api_url = f"https://api.commerce.naver.com/external/v1/product-attributes/attribute-value-units"
+
         result = requests.get(api_url, headers=headers)
         result_text = result.text.encode("utf-8")
-        res_json = json.loads(result_text)
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
 
-        return res_json
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
 
     # 카테고리별 속성값 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
     def get_product_attribute_values_from_category_id(self, category_id):
         headers = self.get_headers()
         api_url = (
             f"https://api.commerce.naver.com/external/v1/product-attributes/attribute-values?categoryId={category_id}"
         )
+
         result = requests.get(api_url, headers=headers)
         result_text = result.text.encode("utf-8")
-        res_json = json.loads(result_text)
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
 
-        return res_json
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
 
     # 카테고리별 속성 조회
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
     def get_product_attributes_from_category_id(self, category_id):
         headers = self.get_headers()
         api_url = f"https://api.commerce.naver.com/external/v1/product-attributes/attributes?categoryId={category_id}"
+
         result = requests.get(api_url, headers=headers)
         result_text = result.text.encode("utf-8")
-        res_json = json.loads(result_text)
+        result_json = json.loads(result_text)
+        print(f"status_code: {result.status_code}")
+        print(result_json)
 
-        return res_json
+        if result.status_code == HTTPStatus.OK:
+            print("성공")
+        else:
+            print("실패")
+            global_log_append(result_json)
+            self.initData()
+            raise Exception(result_json)
+
+        return result_json
 
 
 if __name__ == "__main__":
@@ -218,11 +397,19 @@ if __name__ == "__main__":
 
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
+    data = ""
+
     # 상품 조회
     # data = searchBot.get_product(product_id)
 
     # 모든 카테고리 조회
     # data = searchBot.get_all_category()
+
+    # 상품명 조회
+    # data = asyncio.run(searchBot.get_all_product_from_keyword("햇반"))
+
+    # 상품 단일 조회
+    # data = searchBot.get_product_from_id(5825766254)
 
     # 주소록 조회
     # data = searchBot.search_addr()
@@ -230,17 +417,11 @@ if __name__ == "__main__":
     # 묶음배송그룹 조회
     # data = searchBot.delivery_bundle_group()
 
-    # 상품명 조회
-    # data = searchBot.get_all_product_from_keyword("햇반")
-
-    # 상품 단일 조회
-    # data = searchBot.get_product_from_id(5825766254)
-
     # 전체 속성값 조회
-    # data = searchBot.get_product_attributes()
+    # data = searchBot.get_product_attribute_value_units()
 
     # 카테고리별 속성값 조회
-    data = searchBot.get_product_attribute_values_from_category_id(category_id)
+    # data = searchBot.get_product_attribute_values_from_category_id(category_id)
 
     # 카테고리별 속성 조회
     # data = searchBot.get_product_attributes_from_category_id(category_id)
@@ -252,3 +433,6 @@ if __name__ == "__main__":
     print(len(data))
 
     # clipboard.copy(str(data))
+
+    # 유효시간 지난 토큰 테스트
+    # {"access_token":"2DtQ2IW1TX2ZLuMD6Qkesw==","expires_in":8295,"token_type":"Bearer"}
