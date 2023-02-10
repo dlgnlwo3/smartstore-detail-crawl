@@ -12,7 +12,8 @@ import requests
 import json
 import time
 import asyncio
-from common.utils import global_log_append
+from common.utils import global_log_append, get_mime_type
+
 from tenacity import retry, wait_fixed, stop_after_attempt
 
 
@@ -57,6 +58,11 @@ class CommerceAPI:
         # 유효 시간이 지난 테스트용 토큰
         # self.token = "2DtQ2IW1TX2ZLuMD6Qkesw=="
         return {"Authorization": f"Bearer {self.token}", "content-type": "application/json"}
+
+    def get_headers_multipart(self):
+        # 유효 시간이 지난 테스트용 토큰
+        # self.token = "2DtQ2IW1TX2ZLuMD6Qkesw=="
+        return {"Authorization": f"Bearer {self.token}"}
 
     async def set_client_secret_sign(self):
         self.timestamp = self.get_timestamp()
@@ -111,6 +117,50 @@ class CommerceAPI:
             print("실패")
 
         return result, fail_reason
+
+    # 이미지 업로드
+    @retry(
+        wait=wait_fixed(3),  # 3초 대기
+        stop=stop_after_attempt(2),  # 2번 재시도
+    )
+    async def multi_image_upload(self, img_list: list):
+        print("multi_image_upload")
+
+        uploaded_images = []
+
+        if len(img_list) > 10:
+            print("이미지수", len(img_list))
+            print("이미지는 최대 10개까지만 등록가능합니다.")
+            return uploaded_images
+
+        if len(img_list) <= 0:
+            print("입력된 이미지가 없습니다.")
+            return uploaded_images
+
+        api_url = f"https://api.commerce.naver.com/external/v1/product-images/upload"
+
+        files = {}
+
+        for i in range(len(img_list)):
+            img_path = img_list[i]
+            img_name = os.path.basename(img_path)
+            img_type = get_mime_type(img_path)
+            img_binary = open(img_path, "rb").read()
+            files.update({f"imageFiles[{i}]": (f"{img_name}", img_binary, img_type)})
+
+        headers = self.get_headers_multipart()
+        res = requests.post(api_url, headers=headers, files=files)
+
+        result_text = res.text
+        res_json = json.loads(result_text)
+        uploaded_images = res_json["images"]
+
+        uploaded_images = [x["url"] for x in uploaded_images]
+        print(uploaded_images)
+
+        await asyncio.sleep(1)
+
+        return uploaded_images
 
     # 상품번호 조회
     @retry(

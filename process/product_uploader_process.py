@@ -14,7 +14,6 @@ from dtos.common_dto import CommonDto
 from common.order_file import OrderFile
 
 from api.commerce_api import CommerceAPI
-from api.image_upload import CommerceImageUploader
 from features.get_dto_from_row import GetDtos
 from features.get_product_dict import GetProductDict
 import time
@@ -39,8 +38,6 @@ class ProductUploaderProcess:
         try:
             order_file = OrderFile(self.guiDto.excel_file)
             df_order = order_file.df_order
-
-            self.imageUploader = CommerceImageUploader(self.commerceAPI_client_id, self.commerceAPI_client_secret)
 
             self.addBot = CommerceAPI(
                 client_id=self.commerceAPI_client_id, client_secret=self.commerceAPI_client_secret
@@ -96,16 +93,14 @@ class ProductUploaderProcess:
 
     # 이미지 업로드
     def convert_img_url(self, commonDto: CommonDto):
-        commonDto.representativeImageUrl = asyncio.run(
-            self.imageUploader.multi_image_upload([commonDto.representativeImage])
-        )
-        commonDto.optionalImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.optionalImages))
-        commonDto.detailImagesUrls = asyncio.run(self.imageUploader.multi_image_upload(commonDto.detailImages))
+        commonDto.representativeImageUrl = asyncio.run(self.addBot.multi_image_upload([commonDto.representativeImage]))
+        commonDto.optionalImagesUrls = asyncio.run(self.addBot.multi_image_upload(commonDto.optionalImages))
+        commonDto.detailImagesUrls = asyncio.run(self.addBot.multi_image_upload(commonDto.detailImages))
 
         # GUI에서 상세이미지를 선택 한 경우 실행
         if os.path.isfile(self.detail_img):
             print(f"상세 이미지 업로드 함")
-            detail_img_url = asyncio.run(self.imageUploader.multi_image_upload([self.detail_img]))
+            detail_img_url = asyncio.run(self.addBot.multi_image_upload([self.detail_img]))
             commonDto.detailImagesUrls.insert(0, detail_img_url[0])
             print(commonDto.detailImagesUrls)
             print()
