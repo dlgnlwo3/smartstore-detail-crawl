@@ -206,7 +206,7 @@ class CommonDto:
     @sellerManagementCode.setter
     def sellerManagementCode(self, value: str):  # setter
         if value != "":
-            if value.find("smartstore.naver.com") > -1:
+            if value.find("smartstore.naver.com") > -1 or value.find("brand.naver.com"):
                 smart_store_url = value.split("/")
                 value = smart_store_url[3] + "-" + smart_store_url[5]
             value = value[:30]
