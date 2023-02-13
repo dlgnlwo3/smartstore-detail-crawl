@@ -29,7 +29,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v0.0.13 (토큰 만료 방지 및 이미지 업로드 API 통합)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v0.0.14 (토큰 만료 방지 및 이미지 업로드 API 통합)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
@@ -99,7 +99,7 @@ class MainUI(QWidget):
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle("스마트스토어 v0.0.13")
+        self.setWindowTitle("스마트스토어 v0.0.14")
         self.resize(600, 600)
         self.center()
         self.show()

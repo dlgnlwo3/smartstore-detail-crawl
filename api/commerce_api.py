@@ -400,7 +400,9 @@ if __name__ == "__main__":
     product_id = 7984456905
 
     # 50002627 -> 스포츠/레저>등산>등산의류>재킷
-    category_id = 50002627
+    # 50002326 -> 디지털/가전>음향가전>마이크>일반마이크
+    # 50000091 -> 노트북 악세사리
+    category_id = 50000091
 
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
@@ -431,7 +433,7 @@ if __name__ == "__main__":
     # data = searchBot.get_product_attribute_values_from_category_id(category_id)
 
     # 카테고리별 속성 조회
-    # data = searchBot.get_product_attributes_from_category_id(category_id)
+    data = searchBot.get_product_attributes_from_category_id(category_id)
 
     print(type(data))
 

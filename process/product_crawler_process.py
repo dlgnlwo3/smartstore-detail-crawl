@@ -228,7 +228,12 @@ class ProductCrawlerProcess:
         category = ""
         try:
             categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
-            category = categories[-1].get_attribute("href").split("/")[-1]
+
+            if len(categories) == 0:
+                print("해당 상점에는 카테고리가 존재하지 않습니다.")
+                category = get_category_id_from_product_name(product_name, self.cmBot)
+            else:
+                category = categories[-1].get_attribute("href").split("/")[-1]
 
             # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
             if len(category) > 10:
