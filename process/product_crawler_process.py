@@ -113,6 +113,10 @@ class ProductCrawlerProcess:
         # 해당 스토어에 접속, 물품 80개씩 보기, 리스트 형식 정렬 및 누적판매순 정렬
         # ex) https://smartstore.naver.com/dokkaebistore/category/ALL?st=TOTALSALE&dt=LIST&page=1&size=80
 
+        # 아래 스토어와 같이 카테고리를 아예 등록해놓지 않은 상점이 있음
+        # 그 경우 url에 검색옵션을 넣어도 적용되지 않고 아래의 주소로 리다이렉트 됨
+        # ex) https://smartstore.naver.com/hilux_
+
         # 접속한 스토어가 브랜드 전용 스토어라면 (brand.naver.com)
         # url -> page 숫자를 수정해도 1페이지로 강제로 이동됨
 
@@ -121,37 +125,20 @@ class ProductCrawlerProcess:
 
         # 상품 목록 페이지 접속
         driver.get(f"{self.guiDto.store_url}/category/ALL?st=TOTALSALE&dt=LIST&page={current_page}&size={product_size}")
+        time.sleep(1)
 
-        # 현재 상점의 전체상품 총 개수 파악
-        # $x('//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong')
-        all_products = driver.find_element(By.XPATH, '//a[contains(@class, "N=a:ctt.cat")]//strong').get_attribute(
-            "textContent"
-        )
-        all_products = all_products.replace(",", "")
-        all_products = int(all_products)
-        print(f"전체상품: {all_products}개")
+        # https://smartstore.naver.com/hilux_
+        if f"category/ALL?st=TOTALSALE" not in driver.current_url:
+            print(f"url 옵션 적용이 안되는 스토어")
 
-        max_page = all_products / product_size
-        if (all_products % product_size) != 0:
-            max_page = (all_products / product_size) + 1
-        max_page = int(max_page)
-        print(f"마지막 페이지: {max_page}")
-        print()
-
-        while True:
             # 로딩대기
             WebDriverWait(driver, self.default_wait).until(
-                EC.element_to_be_clickable((By.XPATH, '//a[contains(@class, "a:lst.product")]'))
+                EC.element_to_be_clickable((By.XPATH, '//a[contains(@class, "a:all.product")]'))
             )
             time.sleep(1)
 
-            # 현재 url과 현재 페이지가 일치하지 않는 경우 조회 종료
-            if f"page={current_page}" not in driver.current_url:
-                print(f"url 조회 종료")
-                break
-
             # 현재 페이지의 상품 url 수집
-            product_links = driver.find_elements(By.XPATH, '//a[contains(@class, "a:lst.product")]')
+            product_links = driver.find_elements(By.XPATH, '//a[contains(@class, "a:all.product")]')
 
             # 상품 url 저장
             for product_link in product_links:
@@ -167,21 +154,70 @@ class ProductCrawlerProcess:
                 else:
                     print(f"파일명에 사용할 수 없는 특수문자 포함")
 
-                # product_url_list.append(product_url_dto.get_dict())
+        # 나머지 리스트 형태가 적용되는 스토어
+        else:
+            print(f"정상 스토어")
 
-            current_page += 1
+            # 현재 상점의 전체상품 총 개수 파악
+            # $x('//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong')
+            all_products = driver.find_element(By.XPATH, '//a[contains(@class, "N=a:ctt.cat")]//strong').get_attribute(
+                "textContent"
+            )
+            all_products = all_products.replace(",", "")
+            all_products = int(all_products)
+            print(f"전체상품: {all_products}개")
 
-            # 다음 페이지 버튼 클릭
-            if current_page <= max_page:
-                if current_page % 10 == 1:
-                    driver.find_element(By.XPATH, f'//a[contains(@role, "button")][contains(text(), "다음")]').click()
+            max_page = all_products / product_size
+            if (all_products % product_size) != 0:
+                max_page = (all_products / product_size) + 1
+            max_page = int(max_page)
+            print(f"마지막 페이지: {max_page}")
+            print()
+
+            while True:
+                # 로딩대기
+                WebDriverWait(driver, self.default_wait).until(
+                    EC.element_to_be_clickable((By.XPATH, '//a[contains(@class, "a:lst.product")]'))
+                )
+                time.sleep(1)
+
+                # 현재 url과 현재 페이지가 일치하지 않는 경우 조회 종료
+                if f"page={current_page}" not in driver.current_url:
+                    print(f"url 조회 종료")
+                    break
+
+                # 현재 페이지의 상품 url 수집
+                product_links = driver.find_elements(By.XPATH, '//a[contains(@class, "a:lst.product")]')
+
+                # 상품 url 저장
+                for product_link in product_links:
+                    product_url_dto = ProductURLDto()
+                    product_url_dto.product_name = product_link.find_element(By.CSS_SELECTOR, "strong").get_attribute(
+                        "textContent"
+                    )
+                    product_url_dto.product_url = product_link.get_attribute("href")
+                    print(f"{product_url_dto.product_name} {product_url_dto.product_url}")
+
+                    if re.search('[\/:*?"<>|]', product_url_dto.product_name) == None:
+                        product_url_list.append(product_url_dto.get_dict())
+                    else:
+                        print(f"파일명에 사용할 수 없는 특수문자 포함")
+
+                    # product_url_list.append(product_url_dto.get_dict())
+
+                current_page += 1
+
+                # 다음 페이지 버튼 클릭
+                if current_page <= max_page:
+                    if current_page % 10 == 1:
+                        driver.find_element(By.XPATH, f'//a[contains(@role, "button")][contains(text(), "다음")]').click()
+                    else:
+                        driver.find_element(
+                            By.XPATH, f'//a[contains(@role, "menuitem")][contains(text(), "{current_page}")]'
+                        ).click()
+                    print()
                 else:
-                    driver.find_element(
-                        By.XPATH, f'//a[contains(@role, "menuitem")][contains(text(), "{current_page}")]'
-                    ).click()
-                print()
-            else:
-                print(f"다음 페이지 없음")
+                    print(f"다음 페이지 없음")
 
         # 데이터 저장
         self.all_product_url_to_excel(product_url_list)
