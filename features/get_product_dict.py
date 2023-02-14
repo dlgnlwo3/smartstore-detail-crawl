@@ -51,7 +51,7 @@ class GetProductDict:
         originProduct.update({"name": commonDto.name})
 
         # [할인 전 가격]이 빈칸이 아닌 경우
-        if commonDto.before_discount_price:
+        if commonDto.before_discount_price != "" and commonDto.before_discount_price != "0":
             print("할인 적용")
             originProduct.update({"salePrice": int(commonDto.before_discount_price)})
 
@@ -70,7 +70,7 @@ class GetProductDict:
                     }
                 }
             )
-        else:
+        elif commonDto.before_discount_price == "" or commonDto.before_discount_price == "0":
             # 판매가
             originProduct.update({"salePrice": int(commonDto.salePrice)})
 
