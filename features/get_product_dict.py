@@ -248,6 +248,9 @@ class GetProductDict:
                 half_price = int(commonDto.salePrice) / 2
                 half_price = int(half_price)
 
+                if optionPrices[i] == "":
+                    optionPrices[i] = 0
+
                 if abs(int(optionPrices[i])) > abs(half_price):
                     optionPrices[i] = half_price
 

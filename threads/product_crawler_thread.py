@@ -15,7 +15,7 @@ from datetime import timedelta
 from timeit import default_timer as timer
 from process.product_crawler_process import ProductCrawlerProcess
 
-# import debugpy
+import debugpy
 
 
 class ProductListSearchThread(QThread):
@@ -33,7 +33,7 @@ class ProductListSearchThread(QThread):
 
     def run(self):
         try:
-            # debugpy.debug_this_thread()
+            debugpy.debug_this_thread()
 
             self.log_msg.emit(f"검색 시작")
 
@@ -79,7 +79,7 @@ class ProductDetailSearchThread(QThread):
 
     def run(self):
         try:
-            # debugpy.debug_this_thread()
+            debugpy.debug_this_thread()
 
             self.log_msg.emit(f"검색 시작")
 

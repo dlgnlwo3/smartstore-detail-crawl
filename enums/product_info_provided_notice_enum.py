@@ -542,7 +542,7 @@ class ProductInfoProvidedNotice(Enum):
             "color": "상품상세참조",
             "material": "상품상세참조",
             "recommendedAge": "상품상세참조",
-            "releaseDate": "상품상세참조",
+            # "releaseDate": "상품상세참조",
             "releaseDateText": "상품상세참조",
             "manufacturer": "상품상세참조",
             "caution": "상품상세참조",

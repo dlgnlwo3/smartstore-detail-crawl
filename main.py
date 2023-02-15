@@ -29,7 +29,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v0.0.16 (할인전가격 -> 0을 입력해도 적용하도록 변경)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v0.0.17 (체험판 적용)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
@@ -83,6 +83,12 @@ class MainUI(QWidget):
         self.icon.finished.connect(self.set_window_icon_from_response)
         self.icon.get(QNetworkRequest(QUrl(ICON_IMAGE_URL)))
 
+        # 오늘 날짜, 현재 시간
+        today = datetime.now()
+        trial = datetime(2023, 2, 21)
+        print(f"today: {today}, trail: {trial}")
+        trial_notice = QLabel(f"사용 기간이 종료되었습니다.")
+
         # 탭 초기화
         self.API_setting_tab = APISettingUI()
         self.product_crawler_tab = ProductCrawlerUI()
@@ -95,11 +101,17 @@ class MainUI(QWidget):
         tabs.addTab(self.API_setting_tab, "API 설정")
 
         vbox = QVBoxLayout()
+
+        # if today <= trial:
+        #     vbox.addWidget(tabs)
+        # else:
+        #     vbox.addWidget(trial_notice)
+
         vbox.addWidget(tabs)
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle("스마트스토어 v0.0.16")
+        self.setWindowTitle(f"스마트스토어 v0.0.17")
         self.resize(600, 600)
         self.center()
         self.show()
