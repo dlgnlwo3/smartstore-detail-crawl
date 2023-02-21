@@ -22,6 +22,9 @@ from common.image_util import remove_bg
 from common.category_util import get_category_id_from_product_name
 from api.commerce_api import CommerceAPI
 from config import TODAY_OUTPUT_FOLDER
+import requests
+from bs4 import BeautifulSoup
+import json
 
 
 class ProductCrawlerProcess:
@@ -252,31 +255,39 @@ class ProductCrawlerProcess:
 
         # 로딩대기
         try:
-            WebDriverWait(driver, self.default_wait).until(
+            WebDriverWait(driver, 5).until(
                 EC.element_to_be_clickable((By.XPATH, '//a[./span[contains(text(), "구매하기")]]'))
             )
         except Exception as e:
-            pass
+            return
         finally:
             time.sleep(1)
 
         # 카테고리
         category = ""
         try:
-            categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
+            # categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
 
-            if len(categories) == 0:
-                print("해당 상점에는 카테고리가 존재하지 않습니다.")
-                category = get_category_id_from_product_name(product_name, self.cmBot)
-            else:
-                category = categories[-1].get_attribute("href").split("/")[-1]
+            response = requests.get(product_url)
+            soup = BeautifulSoup(response.content, "html.parser")
 
-            # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
-            if len(category) > 10:
-                category = get_category_id_from_product_name(product_name, self.cmBot)
+            # 상품 정보를 담고 있는 JSON 문자열을 가져옴
+            script = soup.find("script", {"type": "application/ld+json"})
+            json_info = json.loads(script.string)
+            category = str(json_info["category"])
 
-            if len(category) > 10:
-                category = ""
+            # if len(categories) == 0:
+            #     print("해당 상점에는 카테고리가 존재하지 않습니다.")
+            #     category = get_category_id_from_product_name(product_name, self.cmBot)
+            # else:
+            #     category = categories[-1].get_attribute("href").split("/")[-1]
+
+            # # 브랜드 상점의 전용 카테고리인 경우 이상한 아이디값이 들어갈 수 있음
+            # if len(category) > 10:
+            #     category = get_category_id_from_product_name(product_name, self.cmBot)
+
+            # if len(category) > 10:
+            #     category = ""
 
             print(category)
 
@@ -328,7 +339,7 @@ class ProductCrawlerProcess:
             delivery_company = driver.find_element(
                 By.XPATH, '//div[./span[contains(text(), "택배배송")]]//span[3]'
             ).get_attribute("textContent")
-            print(delivery_company)
+            print(f"delivery_company: {delivery_company}")
         except Exception as e:
             print("택배사 오류")
         finally:
@@ -342,8 +353,7 @@ class ProductCrawlerProcess:
                 By.XPATH, '//div[./span[contains(text(), "택배배송")]]//span[2]'
             ).get_attribute("textContent")
             delivery_fee = re.sub(r"[^0-9]", "", delivery_fee)
-            print(delivery_fee)
-            print()
+            print(f"delivery_fee: {delivery_fee}")
         except Exception as e:
             print("배송비 오류")
         finally:
@@ -569,9 +579,9 @@ class ProductCrawlerProcess:
                     print()
 
             # 옵션 3개
-            elif option_len == 3:
-                print(f"옵션 3개 입니다.")
-                pass
+            elif option_len <= 3:
+                print(f"옵션 3개 이상 미구현")
+                return
 
         except Exception as e:
             print("옵션 오류")
@@ -632,14 +642,15 @@ class ProductCrawlerProcess:
 
                 product_detail_dto: ProductDetailDto = self.get_product_detail_dto(product_name, product_url)
 
-                print(f"{product_detail_dto.product_name}")
-                productDetailDtos.append(product_detail_dto.get_dict())
-                self.product_detail_to_excel(productDetailDtos)
-                time.sleep(1)
+                if product_detail_dto != None:
+                    print(f"{product_detail_dto.product_name}")
+                    productDetailDtos.append(product_detail_dto.get_dict())
+                    self.product_detail_to_excel(productDetailDtos)
+                    time.sleep(1)
 
-                print(f"{self.i} / {product_name} 저장")
+                    print(f"{self.i} / {product_name} 저장")
 
-                self.log_msg.emit(f"{self.i} / {product_name} 저장")
+                    self.log_msg.emit(f"{self.i} / {product_name} 저장")
 
             except Exception as e:
                 print(e)

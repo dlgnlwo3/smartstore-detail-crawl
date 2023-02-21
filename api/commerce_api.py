@@ -402,7 +402,7 @@ if __name__ == "__main__":
     # 50002627 -> 스포츠/레저>등산>등산의류>재킷
     # 50002326 -> 디지털/가전>음향가전>마이크>일반마이크
     # 50000091 -> 노트북 악세사리
-    category_id = 50000091
+    category_id = 50002326
 
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
