@@ -40,6 +40,8 @@ class CommonDto:
         self.__optionStockQuantity = ""  # 옵션재고 ("stockQuantity": 0 형식으로 들어감)
         self.__optionPrices = ""  # 옵션가격 ("price": 0 형식으로 들어감)
 
+        self.__detail_attribute = ""  # 상품속성
+
     @property
     def media_path(self):  # getter
         return self.__media_path
@@ -260,3 +262,11 @@ class CommonDto:
     @optionPrices.setter
     def optionPrices(self, value):  # setter
         self.__optionPrices = value
+
+    @property
+    def detail_attribute(self):  # getter
+        return self.__detail_attribute
+
+    @detail_attribute.setter
+    def detail_attribute(self, value):  # setter
+        self.__detail_attribute = value

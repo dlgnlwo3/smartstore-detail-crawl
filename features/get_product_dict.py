@@ -13,6 +13,7 @@ from features.convert_delivery_company_code import *
 import re
 import clipboard
 from features.get_notice_from_category_code import CategoryCodeConverter
+from api.commerce_api import CommerceAPI
 from copy import deepcopy
 
 
@@ -25,6 +26,9 @@ class GetProductDict:
 
     def get_all_categories(self, all_categories):
         self.all_categories = all_categories
+
+    def get_addBot(self, addBot: CommerceAPI):
+        self.addBot = addBot
 
     def get_product(self, commonDto: CommonDto):
         product = self.product
@@ -43,6 +47,8 @@ class GetProductDict:
         deliveryInfo: dict = originProduct["deliveryInfo"]
         # 상품정보제공고시
         productInfoProvidedNotice: dict = detailAttribute["productInfoProvidedNotice"]
+        # 상품속성
+        productAttributes: dict = detailAttribute["productAttributes"]
 
         # 카테고리가 숫자형이 아니라면 카테고리코드로 변환하는 작업
         if commonDto.leafCategoryId.isdigit() == False:
@@ -176,6 +182,12 @@ class GetProductDict:
 
         # clipboard.copy(str(product))
 
+        # 상품속성
+        if commonDto.detail_attribute != "":
+            print(commonDto.detail_attribute)
+            attribute_values = self.get_attribute_values(commonDto)
+            productAttributes.update(attribute_values)
+
         return product
 
     # detailContent
@@ -271,3 +283,22 @@ class GetProductDict:
         print(optionCombinations)
 
         return optionCombinations
+
+    # 상품속성
+    def get_attribute_values(self, commonDto: CommonDto):
+        print(f"leafCategoryId: {commonDto.leafCategoryId}")
+        print(f"detail_attribute: {commonDto.detail_attribute}")
+        attribute_values = []
+
+        # 카테고리코드로 입력 가능한 상품속성을 검색합니다.
+        attribute_data = self.addBot.get_product_attribute_values_from_category_id(commonDto.leafCategoryId)
+        # print(attribute_data)
+
+        detail_attribute_list = commonDto.detail_attribute.split(";")
+        print(detail_attribute_list)
+
+        for i, attribute in enumerate(detail_attribute_list):
+            print(f"{i}, {attribute}")
+            print()
+
+        return attribute_values

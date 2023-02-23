@@ -29,6 +29,7 @@ class OrderFile:
             "옵션그룹": str,
             "옵션이름": str,
             "옵션가격": str,
+            "상품속성": str,
         }
 
     def initData(self):

@@ -41,6 +41,9 @@ class GetDtos:
         # 판매자 설정 코드
         commonDto.sellerManagementCode = str(row["상품URL"])
 
+        # 상품속성
+        commonDto.detail_attribute = str(row["상품속성"])
+
         return commonDto
 
     # DietFoodDto

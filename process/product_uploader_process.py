@@ -60,6 +60,8 @@ class ProductUploaderProcess:
 
                     get_product_dict.get_all_categories(self.all_categories)
 
+                    get_product_dict.get_addBot(self.addBot)
+
                     # 1. 로컬의 이미지를 네이버에 업로드하고 url로 가져옵니다.
                     commonDto = self.convert_img_url(commonDto)
 
