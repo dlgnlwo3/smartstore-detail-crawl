@@ -623,6 +623,26 @@ class ProductCrawlerProcess:
             driver.implicitly_wait(self.default_wait)
             product_detail_dto.product_detail_imgs = product_detail_imgs
 
+        # 상품 속성
+        try:
+            driver.implicitly_wait(1)
+            detail_attributes = []
+
+            # $x('//div[contains(@class, "detail_attributes")]//td')
+            detail_attribute_tds = driver.find_elements(By.XPATH, '//div[contains(@class, "detail_attributes")]//td')
+
+            for detail_attribute_td in detail_attribute_tds:
+                detail_attribute = detail_attribute_td.get_attribute("textContent")
+                print(detail_attribute)
+                detail_attributes.append(detail_attribute)
+
+        except Exception as e:
+            print("상품속성 오류")
+            print(e)
+        finally:
+            driver.implicitly_wait(self.default_wait)
+            product_detail_dto.detail_attributes = detail_attributes
+
         return product_detail_dto
 
     # 상품URL이 들어있는 엑셀파일을 이용해서 상품 상세정보를 가져옵니다.

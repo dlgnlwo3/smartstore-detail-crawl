@@ -12,6 +12,7 @@ import requests
 import json
 import time
 import asyncio
+import clipboard
 from common.utils import global_log_append, get_mime_type
 
 from tenacity import retry, wait_fixed, stop_after_attempt
@@ -397,12 +398,13 @@ if __name__ == "__main__":
     client_id = "1yhn7qj8fvbQYerxmGO8ja"
     client_secret = "$2a$04$3iOzPhDU7KJN247s6UTSCO"
 
-    product_id = 7984456905
+    product_id = 8120528743
 
     # 50002627 -> 스포츠/레저>등산>등산의류>재킷
     # 50002326 -> 디지털/가전>음향가전>마이크>일반마이크
     # 50000091 -> 노트북 악세사리
-    category_id = 50002326
+    # 50000467 -> 마스크/팩>수면팩
+    category_id = 50000467
 
     searchBot = CommerceAPI(client_id=client_id, client_secret=client_secret)
 
@@ -430,10 +432,10 @@ if __name__ == "__main__":
     # data = searchBot.get_product_attribute_value_units()
 
     # 카테고리별 속성값 조회
-    # data = searchBot.get_product_attribute_values_from_category_id(category_id)
+    data = searchBot.get_product_attribute_values_from_category_id(category_id)
 
     # 카테고리별 속성 조회
-    data = searchBot.get_product_attributes_from_category_id(category_id)
+    # data = searchBot.get_product_attributes_from_category_id(category_id)
 
     print(type(data))
 
@@ -441,7 +443,7 @@ if __name__ == "__main__":
 
     print(len(data))
 
-    # clipboard.copy(str(data))
+    clipboard.copy(str(data))
 
     # 유효시간 지난 토큰 테스트
     # {"access_token":"2DtQ2IW1TX2ZLuMD6Qkesw==","expires_in":8295,"token_type":"Bearer"}

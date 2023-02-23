@@ -17,6 +17,9 @@ class ProductDetailDto:
         self.__option_names = []
         self.__option_prices = []
 
+        # 상품속성
+        self.__detail_attributes = []
+
     @property
     def product_name(self):  # getter
         return self.__product_name
@@ -116,6 +119,20 @@ class ProductDetailDto:
         self.__product_option = value
 
     @property
+    def detail_attributes(self):  # getter
+        return self.__detail_attributes
+
+    @detail_attributes.setter
+    def detail_attributes(self, value: list):  # setter
+
+        list_to_str = ""
+        if len(value) > 0:
+            list_to_str = ";".join(value)
+        list_to_str = list_to_str.replace(", ", ";")
+
+        self.__detail_attributes = list_to_str
+
+    @property
     def option_group_names(self):  # getter
         return self.__option_group_names
 
@@ -180,4 +197,5 @@ class ProductDetailDto:
             "옵션그룹": self.option_group_names,
             "옵션이름": self.option_names,
             "옵션가격": self.option_prices,
+            "상품속성": self.detail_attributes,
         }
