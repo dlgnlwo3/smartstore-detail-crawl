@@ -31,6 +31,7 @@ class ProductUploaderProcess:
         self.excel_file = self.guiDto.excel_file
         self.media_path = self.guiDto.media_path
         self.detail_img = self.guiDto.detail_img
+        self.catalog_search = self.guiDto.catalog_search
 
     def work_start(self):
         print(f"work_start")
@@ -61,6 +62,8 @@ class ProductUploaderProcess:
                     get_product_dict.get_all_categories(self.all_categories)
 
                     get_product_dict.get_addBot(self.addBot)
+
+                    get_product_dict.get_guiDto(self.guiDto)
 
                     # 1. 로컬의 이미지를 네이버에 업로드하고 url로 가져옵니다.
                     commonDto = self.convert_img_url(commonDto)

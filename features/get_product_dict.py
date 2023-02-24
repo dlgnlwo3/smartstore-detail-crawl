@@ -16,6 +16,7 @@ from features.get_notice_from_category_code import CategoryCodeConverter
 from api.commerce_api import CommerceAPI
 from copy import deepcopy
 from common.catalog_util import get_catalog_from_product_name
+from dtos.gui_dto import GUIDto
 
 
 class GetProductDict:
@@ -30,6 +31,9 @@ class GetProductDict:
 
     def get_addBot(self, addBot: CommerceAPI):
         self.addBot = addBot
+
+    def get_guiDto(self, guiDto: GUIDto):
+        self.guiDto = guiDto
 
     def get_product(self, commonDto: CommonDto):
         product = self.product
@@ -185,19 +189,20 @@ class GetProductDict:
 
         # clipboard.copy(str(product))
 
-        # 카탈로그 관련
-        catalog_info = get_catalog_from_product_name(commonDto.name, self.addBot)
-        if catalog_info != "":
-            naverShoppingSearchInfo.update(
-                {
-                    "modelId": catalog_info["id"],
-                    "manufacturerName": catalog_info["manufacturerName"],
-                    "brandName": catalog_info["brandName"],
-                    "modelName": catalog_info["name"],
-                }
-            )
-            smartstoreChannelProduct.update({"channelProductName": catalog_info["name"]})
-            print()
+        # 카탈로그 검색 관련
+        if self.guiDto.catalog_search == True:
+            catalog_info = get_catalog_from_product_name(commonDto.name, self.addBot)
+            if catalog_info != "":
+                naverShoppingSearchInfo.update(
+                    {
+                        "modelId": catalog_info["id"],
+                        "manufacturerName": catalog_info["manufacturerName"],
+                        "brandName": catalog_info["brandName"],
+                        "modelName": catalog_info["name"],
+                    }
+                )
+                smartstoreChannelProduct.update({"channelProductName": catalog_info["name"]})
+                print()
 
         # # 상품속성
         # if commonDto.detail_attribute != "":

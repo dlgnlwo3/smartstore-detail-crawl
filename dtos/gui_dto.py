@@ -19,6 +19,7 @@ class GUIDto:
         self.__excel_file = ""
         self.__media_path = ""
         self.__detail_img = ""
+        self.__catalog_search = bool
 
     # API setting
     @property
@@ -55,7 +56,6 @@ class GUIDto:
         self.__product_list_excel_file = value
 
     # product_uploader
-
     @property
     def excel_file(self):  # getter
         return self.__excel_file
@@ -79,3 +79,11 @@ class GUIDto:
     @detail_img.setter
     def detail_img(self, value):  # setter
         self.__detail_img = value
+
+    @property
+    def catalog_search(self):  # getter
+        return self.__catalog_search
+
+    @catalog_search.setter
+    def catalog_search(self, value):  # setter
+        self.__catalog_search = value

@@ -95,6 +95,7 @@ class ProductUploaderUI(QWidget):
         self.guiDto.commerceAPI_client_secret = commerceAPI_client_secret
         self.guiDto.media_path = self.media_path_name.text()
         self.guiDto.detail_img = self.detail_img_name.text()
+        self.guiDto.catalog_search = self.catalog_search.isChecked()
 
         self.store_thread = ProductUploaderThread()
         self.store_thread.log_msg.connect(self.log_append)
@@ -196,6 +197,16 @@ class ProductUploaderUI(QWidget):
         detail_img_inner_layout.addWidget(self.detail_img_select_button)
         detail_img_groupbox.setLayout(detail_img_inner_layout)
 
+        # 카탈로그 검색 기능
+        catalog_search_groupbox = QGroupBox("카탈로그 검색")
+        self.catalog_search_label = QLabel("카탈로그 검색")
+        self.catalog_search = QCheckBox()
+
+        catalog_search_inner_layout = QHBoxLayout()
+        catalog_search_inner_layout.addWidget(self.catalog_search_label)
+        catalog_search_inner_layout.addWidget(self.catalog_search)
+        catalog_search_groupbox.setLayout(catalog_search_inner_layout)
+
         # 작동 그룹박스
         start_stop_groupbox = QGroupBox(f"작업 시작")
         self.save_button = QPushButton("저장")
@@ -230,7 +241,8 @@ class ProductUploaderUI(QWidget):
         mid_layout.addWidget(detail_img_groupbox)
 
         bottom_layout = QHBoxLayout()
-        bottom_layout.addStretch(7)
+        bottom_layout.addStretch(5)
+        bottom_layout.addWidget(catalog_search_groupbox, 3)
         bottom_layout.addWidget(start_stop_groupbox, 3)
 
         log_layout = QHBoxLayout()
