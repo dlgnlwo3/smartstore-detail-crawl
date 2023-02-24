@@ -398,7 +398,7 @@ if __name__ == "__main__":
     client_id = "1yhn7qj8fvbQYerxmGO8ja"
     client_secret = "$2a$04$3iOzPhDU7KJN247s6UTSCO"
 
-    product_id = 8120528743
+    product_id = 8137318825
 
     # 50002627 -> 스포츠/레저>등산>등산의류>재킷
     # 50002326 -> 디지털/가전>음향가전>마이크>일반마이크
@@ -417,10 +417,10 @@ if __name__ == "__main__":
     # data = searchBot.get_all_category()
 
     # 상품명 조회
-    # data = asyncio.run(searchBot.get_all_product_from_keyword("햇반"))
+    data = asyncio.run(searchBot.get_all_product_from_keyword("세모금 종이컵 4000매"))
 
     # 상품 단일 조회
-    # data = searchBot.get_product_from_id(5825766254)
+    # data = searchBot.get_product_from_id(20679236401)
 
     # 주소록 조회
     # data = searchBot.search_addr()
@@ -432,7 +432,7 @@ if __name__ == "__main__":
     # data = searchBot.get_product_attribute_value_units()
 
     # 카테고리별 속성값 조회
-    data = searchBot.get_product_attribute_values_from_category_id(category_id)
+    # data = searchBot.get_product_attribute_values_from_category_id(category_id)
 
     # 카테고리별 속성 조회
     # data = searchBot.get_product_attributes_from_category_id(category_id)

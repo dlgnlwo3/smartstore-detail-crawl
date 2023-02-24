@@ -55,6 +55,7 @@ class productEnum(Enum):
             },
             # 원상품 상세 속성
             "detailAttribute": {
+                "naverShoppingSearchInfo": {},
                 # A/S전화번호, A/S안내
                 "afterServiceInfo": {
                     "afterServiceTelephoneNumber": "010-1234-5678",
@@ -101,6 +102,8 @@ class productEnum(Enum):
         },
         # 스마트스토어 채널 상품
         "smartstoreChannelProduct": {
+            # 모델명
+            "channelProductName": "",
             # 알림받기 동의 회원 전용 상품
             "storeKeepExclusiveProduct": False,
             # 네이버쇼핑 등록 여부

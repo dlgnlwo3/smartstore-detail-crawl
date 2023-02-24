@@ -19,7 +19,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 import urllib.request
 import re
 from common.image_util import remove_bg
-from common.category_util import get_category_id_from_product_name
 from api.commerce_api import CommerceAPI
 from config import TODAY_OUTPUT_FOLDER
 import requests

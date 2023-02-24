@@ -15,6 +15,7 @@ import clipboard
 from features.get_notice_from_category_code import CategoryCodeConverter
 from api.commerce_api import CommerceAPI
 from copy import deepcopy
+from common.catalog_util import get_catalog_from_product_name
 
 
 class GetProductDict:
@@ -47,6 +48,10 @@ class GetProductDict:
         deliveryInfo: dict = originProduct["deliveryInfo"]
         # 상품정보제공고시
         productInfoProvidedNotice: dict = detailAttribute["productInfoProvidedNotice"]
+        # 카탈로그
+        naverShoppingSearchInfo: dict = detailAttribute["naverShoppingSearchInfo"]
+        # 스마트스토어 채널 상품
+        smartstoreChannelProduct: dict = product["smartstoreChannelProduct"]
         # 상품속성
         productAttributes: dict = detailAttribute["productAttributes"]
 
@@ -102,8 +107,6 @@ class GetProductDict:
             optionInfo.update({"optionCombinations": optionCombinations})
         else:
             detailAttribute["optionInfo"] = {}
-
-        print()
 
         # 재고수량
         originProduct.update({"stockQuantity": int(commonDto.stockQuantity)})
@@ -182,11 +185,25 @@ class GetProductDict:
 
         # clipboard.copy(str(product))
 
-        # 상품속성
-        if commonDto.detail_attribute != "":
-            print(commonDto.detail_attribute)
-            attribute_values = self.get_attribute_values(commonDto)
-            productAttributes.update(attribute_values)
+        # 카탈로그 관련
+        catalog_info = get_catalog_from_product_name(commonDto.name, self.addBot)
+        if catalog_info != "":
+            naverShoppingSearchInfo.update(
+                {
+                    "modelId": catalog_info["id"],
+                    "manufacturerName": catalog_info["manufacturerName"],
+                    "brandName": catalog_info["brandName"],
+                    "modelName": catalog_info["name"],
+                }
+            )
+            smartstoreChannelProduct.update({"channelProductName": catalog_info["name"]})
+            print()
+
+        # # 상품속성
+        # if commonDto.detail_attribute != "":
+        #     print(commonDto.detail_attribute)
+        #     attribute_values = self.get_attribute_values(commonDto)
+        #     productAttributes.update(attribute_values)
 
         return product
 
@@ -297,8 +314,15 @@ class GetProductDict:
         detail_attribute_list = commonDto.detail_attribute.split(";")
         print(detail_attribute_list)
 
-        for i, attribute in enumerate(detail_attribute_list):
-            print(f"{i}, {attribute}")
-            print()
+        for i, detail_attribute in enumerate(detail_attribute_list):
+            print(f"{i}, {detail_attribute}")
+
+            try:
+                attribute = next(x for x in attribute_data if x["minAttributeValue"] == detail_attribute)
+                print(attribute)
+                print()
+            except Exception as e:
+                print(e)
+                continue
 
         return attribute_values
