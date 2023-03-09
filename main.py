@@ -29,7 +29,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v0.0.19 (상품 수집 시 품절제품은 제외, 카테고리 수집 시 str 형태로 수집, 상품 등록 시 카테고리코드가 str 형태라면 변환하는 작업 추가)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v0.0.20 (상품등록 시 상품명으로 카탈로그를 검색하는 기능 추가)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
@@ -111,7 +111,7 @@ class MainUI(QWidget):
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle(f"스마트스토어 v0.0.19")
+        self.setWindowTitle(f"스마트스토어 v0.0.20")
         self.resize(600, 600)
         self.center()
         self.show()
