@@ -10,3 +10,6 @@ https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx
 python 3.8 설치후
 
 py -3.8 setup.py install 명령어
+
+pip install rembg 
+pip install onnx

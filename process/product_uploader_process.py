@@ -99,7 +99,8 @@ class ProductUploaderProcess:
     # 이미지 업로드
     def convert_img_url(self, commonDto: CommonDto):
         commonDto.representativeImageUrl = asyncio.run(self.addBot.multi_image_upload([commonDto.representativeImage]))
-        commonDto.optionalImagesUrls = asyncio.run(self.addBot.multi_image_upload(commonDto.optionalImages))
+        commonDto.optionalImagesUrls = []
+        # commonDto.optionalImagesUrls = asyncio.run(self.addBot.multi_image_upload(commonDto.optionalImages))
         commonDto.detailImagesUrls = asyncio.run(self.addBot.multi_image_upload(commonDto.detailImages))
 
         # GUI에서 상세이미지를 선택 한 경우 실행

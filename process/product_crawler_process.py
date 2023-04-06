@@ -162,12 +162,18 @@ class ProductCrawlerProcess:
 
             # 현재 상점의 전체상품 총 개수 파악
             # $x('//a[contains(@class, "N=a:ctt.cat")][./span[contains(text(), "전체상품")]]//strong')
-            all_products = driver.find_element(By.XPATH, '//a[contains(@class, "N=a:ctt.cat")]//strong').get_attribute(
+            # all_products = driver.find_element(By.XPATH, '//a[contains(@class, "N=a:ctt.cat")]//strong').get_attribute(
+            #     "textContent"
+            # )
+            # all_products = all_products.replace(",", "")
+            # all_products = int(all_products)
+            # print(f"전체상품: {all_products}개")
+
+            # 전체상품 가져오기
+            all_products = driver.find_element(By.CSS_SELECTOR, "#CategoryProducts span strong").get_attribute(
                 "textContent"
             )
-            all_products = all_products.replace(",", "")
             all_products = int(all_products)
-            print(f"전체상품: {all_products}개")
 
             max_page = all_products / product_size
             if (all_products % product_size) != 0:
