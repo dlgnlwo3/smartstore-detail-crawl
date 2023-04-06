@@ -24,6 +24,7 @@ from config import TODAY_OUTPUT_FOLDER
 import requests
 from bs4 import BeautifulSoup
 import json
+from common.utils import filter_only_digit_int
 
 
 class ProductCrawlerProcess:
@@ -173,7 +174,7 @@ class ProductCrawlerProcess:
             all_products = driver.find_element(By.CSS_SELECTOR, "#CategoryProducts span strong").get_attribute(
                 "textContent"
             )
-            all_products = int(all_products)
+            all_products = filter_only_digit_int(all_products)
 
             max_page = all_products / product_size
             if (all_products % product_size) != 0:

@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 import os
 from mimetypes import MimeTypes
+import re
 
 
 def get_mime_type(file_path):
@@ -37,3 +38,15 @@ def global_log_append(text):
 def random_delay(start, end):
     x = random.randint(start, end)
     time.sleep(x)
+
+
+def filter_only_digit(text):
+    text = str(text)
+    numbers = re.findall(r"\d+", text)
+    return "".join(numbers)
+
+
+def filter_only_digit_int(text):
+    text = str(text)
+    numbers = re.findall(r"\d+", text)
+    return int("".join(numbers))
