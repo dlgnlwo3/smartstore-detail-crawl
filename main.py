@@ -29,7 +29,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v1.0.0 (콤마오류수정)" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v1.0.1" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
@@ -85,7 +85,7 @@ class MainUI(QWidget):
 
         # 오늘 날짜, 현재 시간
         today = datetime.now()
-        trial = datetime(2023, 2, 21)
+        trial = datetime(2024, 6, 2)
         print(f"today: {today}, trail: {trial}")
         trial_notice = QLabel(f"사용 기간이 종료되었습니다.")
 
@@ -94,25 +94,24 @@ class MainUI(QWidget):
         self.product_crawler_tab = ProductCrawlerUI()
         self.product_uploader_tab = ProductUploaderUI()
 
+        vbox = QVBoxLayout()
+
         # 탭 추가
         tabs = QTabWidget()
         tabs.addTab(self.product_crawler_tab, "상품수집")
         tabs.addTab(self.product_uploader_tab, "상품등록")
         tabs.addTab(self.API_setting_tab, "API 설정")
 
-        vbox = QVBoxLayout()
+        if today < trial:
+            vbox.addWidget(tabs)
+        else:
+            vbox.addWidget(trial_notice)
 
-        # if today <= trial:
-        #     vbox.addWidget(tabs)
-        # else:
-        #     vbox.addWidget(trial_notice)
-
-        vbox.addWidget(tabs)
         self.setLayout(vbox)
 
         # 앱 기본 설정
-        self.setWindowTitle(f"스마트스토어 v1.0.0")
-        self.resize(600, 600)
+        self.setWindowTitle(f"스마트스토어 v1.0.1")
+        self.resize(600, 500)
         self.center()
         self.show()
 
@@ -120,4 +119,4 @@ class MainUI(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     ex = MainUI()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

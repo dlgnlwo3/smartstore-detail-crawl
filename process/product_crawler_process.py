@@ -25,6 +25,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 from common.utils import filter_only_digit_int
+from random_user_agent.user_agent import UserAgent
+from random_user_agent.params import SoftwareName, OperatingSystem
 
 
 class ProductCrawlerProcess:
@@ -240,6 +242,22 @@ class ProductCrawlerProcess:
         print(encode_url)
         return encode_url
 
+    def get_user_agent(self):
+        software_names = [SoftwareName.CHROME.value]
+        operating_systems = [OperatingSystem.WINDOWS.value, OperatingSystem.LINUX.value]
+        user_agent_rotator = UserAgent(software_names=software_names, operating_systems=operating_systems, limit=100)
+        self.user_agent = user_agent_rotator.get_random_user_agent()
+
+    def get_headers(self):
+        self.get_user_agent()
+        headers = {
+            "User-Agent": self.user_agent,
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7,ja;q=0.6",
+            "Referer": "https://m.land.naver.com/",
+        }
+        return headers
+
     # ProductDetailDto
     def get_product_detail_dto(self, product_name, product_url):
         product_detail_dto = ProductDetailDto()
@@ -274,7 +292,7 @@ class ProductCrawlerProcess:
         try:
             # categories = driver.find_elements(By.XPATH, '//a[last()][contains(@class, "a:ctt.cat")]')
 
-            response = requests.get(product_url)
+            response = requests.get(product_url, headers=self.get_headers())
             soup = BeautifulSoup(response.content, "html.parser")
 
             # 상품 정보를 담고 있는 JSON 문자열을 가져옴

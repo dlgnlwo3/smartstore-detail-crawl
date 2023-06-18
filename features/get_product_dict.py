@@ -61,10 +61,15 @@ class GetProductDict:
 
         # 카테고리가 숫자형이 아니라면 카테고리코드로 변환하는 작업
         if commonDto.leafCategoryId.isdigit() == False:
-            # 카테고리 코드 변환 작업
-            commonDto.leafCategoryId = list(
-                filter(lambda item: item["wholeCategoryName"] == commonDto.leafCategoryId, self.all_categories)
-            )[0]["id"]
+
+            try:
+                # 카테고리 코드 변환 작업
+                commonDto.leafCategoryId = list(
+                    filter(lambda item: item["wholeCategoryName"] == commonDto.leafCategoryId, self.all_categories)
+                )[0]["id"]
+            except Exception as e:
+                print(e)
+                commonDto.leafCategoryId = ""
 
         print(f"leafCategoryId: {commonDto.leafCategoryId}")
 
