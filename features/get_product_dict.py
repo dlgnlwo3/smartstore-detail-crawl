@@ -139,6 +139,7 @@ class GetProductDict:
         detailAttribute.update({"sellerCodeInfo": {"sellerManagementCode": f"{commonDto.sellerManagementCode}"}})
 
         # 상품상세정보제공고시
+        notice = ""
         if commonDto.leafCategoryId:
             print("카테고리코드 -> 상품상세정보제공고시")
             notice = CategoryCodeConverter(commonDto.leafCategoryId, self.all_categories).get_notice()

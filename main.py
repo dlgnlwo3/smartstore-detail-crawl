@@ -29,7 +29,7 @@ def my_exception_hook(exctype, value, traceback):
 
 sys.excepthook = my_exception_hook
 
-# pyinstaller -n "스마트스토어 v1.0.1" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
+# pyinstaller -n "스마트스토어 v1.0.2" -w --onefile --clean "main.py" --icon "assets\smartstore.ico"
 
 
 class MainUI(QWidget):
